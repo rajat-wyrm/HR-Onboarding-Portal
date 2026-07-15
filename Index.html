@@ -3267,6 +3267,21 @@
     chk.checked = !!enabled;
     if (enabled) { wrap.classList.add('on'); if (lbl) lbl.textContent = 'Registration Enabled'; }
     else { wrap.classList.remove('on'); if (lbl) lbl.textContent = 'Registration Disabled'; }
+    var regCard = document.getElementById('regFormCard');
+    if (regCard && document.getElementById('publicView')) {
+      regCard.style.display = enabled ? 'block' : 'none';
+      if (!enabled) {
+        var closed = document.createElement('div');
+        closed.className = 'reg-closed-note';
+        closed.id = 'regClosedNote';
+        closed.style.cssText = 'margin:18px auto;max-width:760px;padding:16px 20px;border:1px solid #fecaca;background:#fef2f2;color:#991b1b;border-radius:10px;font-weight:600;text-align:center;';
+        closed.textContent = 'Intern registration is currently closed by the HR team.';
+        if (!document.getElementById('regClosedNote')) regCard.parentNode.insertBefore(closed, regCard.nextSibling);
+      } else {
+        var ex = document.getElementById('regClosedNote');
+        if (ex) ex.parentNode.removeChild(ex);
+      }
+    }
   }
 
   function toggleRegistration() {
