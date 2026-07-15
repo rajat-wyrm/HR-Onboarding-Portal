@@ -739,17 +739,40 @@ function resolveGroupInfo(rowData, projData) {
   return { groupName: groupName, tlEmail: tlEmail, whatsappLink: whatsappLink };
 }
 
+function fmtDate(v) {
+  if (v === undefined || v === null || v === '') return '';
+  var d;
+  if (v instanceof Date) {
+    d = v;
+  } else {
+    var s = String(v).trim();
+    if (!s) return '';
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+      d = new Date(s + (s.length === 10 ? 'T00:00:00' : ''));
+    } else if (/^\d{1,2}[-/]\d{1,2}[-/]\d{4}/.test(s)) {
+      var p = s.split(/[-/]/); d = new Date(p[2], p[1] - 1, p[0]);
+    } else {
+      d = new Date(s);
+    }
+  }
+  if (isNaN(d.getTime())) return String(v);
+  var dd = ('0' + d.getDate()).slice(-2);
+  var mm = ('0' + (d.getMonth() + 1)).slice(-2);
+  var yyyy = d.getFullYear();
+  return dd + '-' + mm + '-' + yyyy;
+}
+
 function srTlRowHtml(rowData, tz) {
   var masterSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(MASTER_SHEET);
   var d = Utilities.formatDate(new Date(), tz, "yyyy-MM-dd");
-  var onboarding = valAt(rowData, masterSheet, "Onboarding Date") || d;
+  var onboarding = fmtDate(valAt(rowData, masterSheet, "Onboarding Date") || d);
   var code = valAt(rowData, masterSheet, "Intern Code") || "";
   var name = valAt(rowData, masterSheet, "Name") || "";
   var email = valAt(rowData, masterSheet, "Email ID") || "";
   var mobile = valAt(rowData, masterSheet, "Mobile No.") || "";
   var domain = valAt(rowData, masterSheet, "Domain Name") || "";
-  var start = valAt(rowData, masterSheet, "Start Date") || "";
-  var end = valAt(rowData, masterSheet, "End Date") || "";
+  var start = fmtDate(valAt(rowData, masterSheet, "Start Date") || "");
+  var end = fmtDate(valAt(rowData, masterSheet, "End Date") || "");
   return "<tr>"
     + '<td style="padding:10px; border-bottom:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">' + escapeHtml(onboarding) + "</td>"
     + '<td style="padding:10px; border-bottom:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">' + escapeHtml(code) + "</td>"
@@ -786,7 +809,7 @@ function fireOnboardingMails(rowNum) {
       var internHtml = internWelcomeTemplate({ name: internName, code: internCode }, groupInfo);
       var internPlain = "Hello " + internName + ",\n\nYour onboarding is verified.\nIntern Code: " + internCode
         + "\nGroup: " + info.groupName + "\nTeam Community: " + info.whatsappLink
-        + "\nOnboarding Date: " + onboardingDate + "\n\nBest Regards,\nHR Operations Team";
+        + "\nOnboarding Date: " + fmtDate(onboardingDate) + "\n\nBest Regards,\nHR Operations Team";
       MailApp.sendEmail({ to: internEmail, subject: internSubject, body: internPlain, htmlBody: internHtml });
       setCol(masterSheet, rowNum, "Intern Mail Sent", "Yes");
       setCol(masterSheet, rowNum, "Intern Mail Timestamp", timestamp);
