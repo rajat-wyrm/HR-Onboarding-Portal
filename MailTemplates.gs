@@ -124,6 +124,7 @@ function srTlSummaryTemplate(groupName, rowsHtml, total) {
               <th style="padding: 12px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Full Name</th>
               <th style="padding: 12px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Email ID</th>
               <th style="padding: 12px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Mobile No.</th>
+              <th style="padding: 12px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">WhatsApp No.</th>
               <th style="padding: 12px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Domain</th>
               <th style="padding: 12px; border-bottom: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Start Date</th>
               <th style="padding: 12px; border-bottom: 1px solid #e2e8f0;">End Date</th>
