@@ -1,0 +1,6 @@
+# Local session notes
+memory-*.md
+
+# OS / editor noise
+.DS_Store
+*.swp
