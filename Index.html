@@ -1,0 +1,3410 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intern Onboarding & HR Operations Portal</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root, [data-theme="dark"] {
+      --bg:#0f172a;
+      --bg-elevated:#111927;
+      --card:#1e293b;
+      --card-hover:#253047;
+      --border:#2d3a50;
+      --border-light:#3a4a62;
+      --text-primary:#f1f5f9;
+      --text-secondary:#94a3b8;
+      --text-tertiary:#64748b;
+      --accent:#1dc9ea;
+      --accent-dim:#0ea5b9;
+      --accent-light:#06b6d4;
+      --accent-bg:#0a2d3a;
+      --green:#22c55e;
+      --green-light:#16a34a;
+      --green-bg:#0a2d1a;
+      --orange:#f59e0b;
+      --orange-light:#d97706;
+      --orange-bg:#2d2108;
+      --red:#ef4444;
+      --red-light:#dc2626;
+      --red-bg:#2d0a0a;
+      --purple:#c084fc;
+      --purple-light:#a855f7;
+      --purple-bg:#2a0a3a;
+      --teal:#14b8a6;
+      --teal-light:#0d9488;
+      --teal-bg:#0a2d2a;
+      --bg-card:var(--card);
+      --card-bg:var(--card);
+      --bg-hover:var(--card-hover);
+      --radius-sm:6px;
+      --radius:10px;
+      --radius-lg:14px;
+      --radius-xl:18px;
+      --shadow-sm:0 1px 2px rgba(0,0,0,0.3);
+      --shadow:0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg:0 8px 30px rgba(0,0,0,0.5);
+      --font:-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', sans-serif;
+      --mono:'SF Mono', 'SFMono-Regular', 'JetBrains Mono', monospace;
+      --transition:all 0.2s cubic-bezier(0.25,0.1,0.25,1);
+    }
+
+    [data-theme="light"] {
+      --bg:#f1f5f9;
+      --bg-elevated:#ffffff;
+      --card:#ffffff;
+      --card-hover:#f8fafc;
+      --border:#e2e8f0;
+      --border-light:#cbd5e1;
+      --text-primary:#0f172a;
+      --text-secondary:#475569;
+      --text-tertiary:#94a3b8;
+      --accent:#0891b2;
+      --accent-dim:#0e7490;
+      --accent-light:#06b6d4;
+      --accent-bg:#ecfeff;
+      --green:#16a34a;
+      --green-light:#15803d;
+      --green-bg:#ecfdf5;
+      --orange:#d97706;
+      --orange-light:#b45309;
+      --orange-bg:#fffbeb;
+      --red:#dc2626;
+      --red-light:#b91c1c;
+      --red-bg:#fef2f2;
+      --purple:#9333ea;
+      --purple-light:#7e22ce;
+      --purple-bg:#faf5ff;
+      --teal:#0d9488;
+      --teal-light:#0f766e;
+      --teal-bg:#f0fdfa;
+      --shadow-sm:0 1px 2px rgba(15,23,42,0.06);
+      --shadow:0 4px 14px rgba(15,23,42,0.10);
+      --shadow-lg:0 10px 34px rgba(15,23,42,0.14);
+    }
+    body { font-family:var(--font); background:var(--bg); color:var(--text-primary); -webkit-font-smoothing:antialiased; min-height:100vh; }
+    .container { max-width:1400px; margin:0 auto; padding:20px; }
+    @media (max-width:768px) { .container { padding:12px; } }
+
+    .hero {
+      background:linear-gradient(135deg,#0f172a 0%,#111927 50%,#0c1b33 100%);
+      border:1px solid var(--border);
+      border-radius:var(--radius-xl); padding:48px 40px; margin-bottom:28px;
+      color:var(--text-primary); position:relative; overflow:hidden;
+    }
+    .hero::before { content:''; position:absolute; top:-60%; right:-15%; width:500px; height:500px; background:radial-gradient(circle,rgba(29,201,234,0.08) 0%,transparent 70%); border-radius:50%; }
+    .hero::after { content:''; position:absolute; bottom:-40%; left:-10%; width:400px; height:400px; background:radial-gradient(circle,rgba(29,201,234,0.05) 0%,transparent 70%); border-radius:50%; }
+    .hero-content { position:relative; z-index:1; display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+    .hero-left { flex:1; min-width:300px; }
+    .hero-right { display:flex; align-items:flex-start; }
+    .hero-badge { display:inline-flex; align-items:center; gap:8px; background:var(--accent-bg); border:1px solid var(--accent); padding:6px 16px; border-radius:50px; font-size:12px; font-weight:600; letter-spacing:0.5px; color:var(--accent); margin-bottom:14px; }
+    .hero-badge::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--accent); flex-shrink:0; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+    .hero h1 { font-size:32px; font-weight:700; letter-spacing:-0.5px; margin-bottom:8px; background:linear-gradient(135deg,var(--text-primary) 0%,var(--accent) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .hero p { font-size:15px; color:var(--text-secondary); max-width:600px; line-height:1.5; margin-bottom:20px; }
+    .btn-hero {
+      display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:50px;
+      background:var(--card); color:var(--text-primary); border:1px solid var(--border);
+      font-size:13px; font-weight:600; cursor:pointer; transition:var(--transition);
+      font-family:var(--font);
+    }
+    .btn-hero:hover { background:var(--card-hover); border-color:var(--accent); color:var(--accent); transform:translateY(-1px); }
+
+    .card { background:var(--card); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); border:1px solid var(--border); margin-bottom:20px; transition:var(--transition); }
+    .card:hover { box-shadow:var(--shadow); border-color:var(--border-light); }
+    .card-header { display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:10px; }
+    .card-title { font-size:16px; font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+    .card-body { padding:20px 24px; }
+
+    .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 12px; border-radius:50px; font-size:11px; font-weight:600; }
+    .badge-accent { background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent); }
+    .badge-green { background:var(--green-bg); color:var(--green); border:1px solid var(--green); }
+    .badge-orange { background:var(--orange-bg); color:var(--orange); border:1px solid var(--orange); }
+    .badge-red { background:var(--red-bg); color:var(--red); border:1px solid var(--red); }
+    .badge-purple { background:var(--purple-bg); color:var(--purple); border:1px solid var(--purple); }
+
+    .chip-multi { display:flex; flex-wrap:wrap; align-items:center; gap:6px; min-height:42px; padding:6px 8px; border:1px solid var(--border-light); border-radius:var(--radius); background:var(--bg); transition:border-color .2s, box-shadow .2s; }
+    .chip-multi:focus-within { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-bg); }
+    .chip-list { display:contents; }
+    .chip { display:inline-flex; align-items:center; gap:6px; padding:4px 6px 4px 11px; border-radius:50px; font-size:12px; font-weight:600; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent); animation:chipPop .2s ease; }
+    @keyframes chipPop { from { opacity:0; transform:scale(.8); } to { opacity:1; transform:scale(1); } }
+    .chip-x { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border:none; border-radius:50%; background:rgba(0,0,0,0.12); color:inherit; cursor:pointer; font-size:14px; line-height:1; transition:background .15s, transform .15s; }
+    .chip-x:hover { background:var(--red); color:#fff; transform:scale(1.12); }
+    .chip-input { flex:1; min-width:120px; border:none; outline:none; background:transparent; color:var(--text-primary); font-size:13px; padding:4px 2px; }
+    .chip-input::placeholder { color:var(--text-tertiary); }
+
+    .btn {
+      display:inline-flex; align-items:center; gap:6px; padding:10px 22px; border:none;
+      border-radius:var(--radius); font-size:13px; font-weight:600; cursor:pointer;
+      transition:var(--transition); font-family:var(--font); text-decoration:none;
+      white-space:nowrap; user-select:none;
+    }
+    .btn:hover { transform:translateY(-1px); box-shadow:var(--shadow); }
+    .btn:active { transform:translateY(0); }
+    .btn-accent { background:var(--accent); color:#0f172a; }
+    .btn-accent:hover { background:var(--accent-light); }
+    .btn-green { background:var(--green); color:#fff; }
+    .btn-orange { background:var(--orange); color:#fff; }
+    .btn-teal { background:var(--teal); color:#fff; }
+    .btn-red { background:var(--red); color:#fff; }
+    .btn-ghost { background:transparent; color:var(--text-secondary); border:1px solid var(--border); }
+    .btn-ghost:hover { background:var(--bg-elevated); border-color:var(--accent); color:var(--accent); }
+    .btn-sm { padding:7px 14px; font-size:12px; }
+    .btn-xs { padding:4px 10px; font-size:11px; border-radius:var(--radius-sm); }
+
+    /* Registration toggle switch */
+    .reg-switch { display:inline-flex; align-items:center; gap:9px; cursor:pointer; user-select:none; padding:5px 12px 5px 10px; border:1px solid var(--border); border-radius:999px; background:var(--bg-elevated); transition:border-color .2s, box-shadow .2s; }
+    .reg-switch:hover { border-color:var(--accent); }
+    .reg-switch input { position:absolute; opacity:0; pointer-events:none; }
+    .reg-switch-track { width:40px; height:22px; border-radius:999px; background:var(--red); position:relative; transition:background .25s ease; flex:0 0 auto; box-shadow:inset 0 1px 3px rgba(0,0,0,.25); }
+    .reg-switch-thumb { position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; transition:transform .25s ease; box-shadow:0 1px 3px rgba(0,0,0,.35); }
+    .reg-switch.on { border-color:var(--green); box-shadow:0 0 0 3px var(--green-bg); }
+    .reg-switch.on .reg-switch-track { background:var(--green); }
+    .reg-switch.on .reg-switch-thumb { transform:translateX(18px); }
+    .reg-switch.loading { opacity:.55; pointer-events:none; }
+    .reg-switch-text { font-size:12px; font-weight:600; color:var(--text-secondary); white-space:nowrap; }
+    .reg-switch.on .reg-switch-text { color:var(--green); }
+
+    /* Analytics dashboard */
+    .analytics-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
+    .analytic-card { background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius); padding:16px 16px 14px; }
+    .analytic-card h4 { margin:0 0 12px; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--text-tertiary); font-weight:700; display:flex; align-items:center; gap:8px; }
+    .analytic-card h4 .dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+    .bar-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; font-size:12px; }
+    .bar-row .bar-label { width:120px; flex:0 0 auto; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .bar-track { flex:1; height:10px; background:var(--bg); border-radius:999px; overflow:hidden; }
+    .bar-fill { height:100%; border-radius:999px; background:linear-gradient(90deg, var(--accent), var(--teal)); transition:width .5s ease; }
+    .bar-val { width:34px; flex:0 0 auto; text-align:right; color:var(--text-primary); font-weight:600; font-family:var(--mono); }
+    .donut-wrap { display:flex; align-items:center; gap:16px; }
+    .donut-legend { display:flex; flex-direction:column; gap:8px; font-size:12px; }
+    .donut-legend .lg { display:flex; align-items:center; gap:8px; color:var(--text-secondary); }
+    .donut-legend .sw { width:10px; height:10px; border-radius:3px; flex:0 0 auto; }
+    .recent-item { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:12px; }
+    .recent-item:last-child { border-bottom:none; }
+    .recent-avatar { width:28px; height:28px; border-radius:50%; background:var(--accent); color:#0f172a; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex:0 0 auto; }
+    .recent-meta { flex:1; min-width:0; }
+    .recent-meta .rn { color:var(--text-primary); font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .recent-meta .rd { color:var(--text-tertiary); font-size:11px; }
+    .pill { font-size:10px; font-weight:700; padding:2px 8px; border-radius:999px; flex:0 0 auto; }
+    .pill-pass { background:rgba(34,197,94,.15); color:var(--green); }
+    .pill-fail { background:rgba(239,68,68,.15); color:var(--red); }
+    .pill-active { background:rgba(29,201,234,.15); color:var(--accent); }
+    .pill-pending { background:rgba(249,115,22,.15); color:var(--orange); }
+    .pill-null { background:var(--bg); color:var(--text-tertiary); border:1px solid var(--border); }
+    .analytics-empty { color:var(--text-tertiary); font-size:12px; padding:10px 0; }
+    .muted { color:var(--text-tertiary); font-size:11px; }
+
+    /* ===== Premium animated dashboard ===== */
+    .stats-grid { grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; }
+    .stat-card { position:relative; overflow:hidden; padding:20px 22px; border:1px solid var(--border-light); border-radius:var(--radius-lg); background:var(--card); box-shadow:var(--shadow-sm); transform-style:preserve-3d; transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, border-color .3s ease; will-change:transform; }
+    .stat-bar { position:absolute; top:0; left:0; right:0; height:3px; border-radius:var(--radius-lg) var(--radius-lg) 0 0; opacity:.85; }
+    .stat-card::before { content:''; position:absolute; inset:0; background:radial-gradient(120% 120% at 100% 0%, rgba(29,201,234,.10), transparent 55%); opacity:0; transition:opacity .3s ease; }
+    .stat-card:hover { box-shadow:var(--shadow-lg); border-color:var(--accent); transform:translateY(-4px); }
+    .stat-card:hover::before { opacity:1; }
+    .stat-card:hover .stat-num { color:var(--accent); }
+    .stat-accent { position:absolute; top:18px; right:18px; width:38px; height:38px; border-radius:12px; opacity:.16; }
+    .stat-icon { position:absolute; top:16px; right:16px; width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; background:var(--accent-bg); border:1px solid var(--border); color:var(--accent); }
+    .stat-icon svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .stat-num { font-size:30px; font-weight:800; letter-spacing:-1px; transition:color .3s ease; line-height:1.1; }
+    .stat-label { font-size:11px; color:var(--text-secondary); font-weight:700; text-transform:uppercase; letter-spacing:.6px; margin-top:4px; }
+    .stat-trend { font-size:11px; margin-top:8px; display:inline-flex; align-items:center; gap:4px; font-weight:600; }
+    .stat-trend.up { color:var(--green); }
+    .stat-trend.down { color:var(--red); }
+
+    /* 3D bar chart */
+    .chart3d { display:flex; align-items:flex-end; justify-content:space-around; gap:14px; height:200px; padding:10px 4px 0; perspective:600px; }
+    .bar3d { position:relative; flex:1; max-width:54px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; transform-style:preserve-3d; }
+    .bar3d-bar { width:100%; border-radius:8px 8px 0 0; background:linear-gradient(180deg,var(--accent-light),var(--accent)); position:relative; transform:rotateX(0deg); transform-origin:bottom; box-shadow:0 -6px 18px rgba(29,201,234,.25), inset 0 1px 0 rgba(255,255,255,.25); transition:height .9s cubic-bezier(.2,.8,.2,1); }
+    .bar3d:nth-child(odd) .bar3d-bar { background:linear-gradient(180deg,var(--purple-light),var(--purple)); box-shadow:0 -6px 18px rgba(192,132,252,.25), inset 0 1px 0 rgba(255,255,255,.25); }
+    .bar3d-bar::after { content:''; position:absolute; left:0; right:0; top:-10px; height:10px; background:inherit; border-radius:8px 8px 0 0; transform:rotateX(60deg); transform-origin:bottom; opacity:.6; }
+    .bar3d:hover .bar3d-bar { filter:brightness(1.12); }
+    .bar3d-val { position:absolute; top:-26px; font-size:12px; font-weight:700; color:var(--text-primary); font-family:var(--mono); }
+    .bar3d-label { margin-top:8px; font-size:10px; color:var(--text-tertiary); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:60px; }
+
+    /* Donut (status) */
+    .donut-big { position:relative; width:150px; height:150px; }
+    .donut-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .donut-center .dc-num { font-size:22px; font-weight:800; color:var(--text-primary); }
+    .donut-center .dc-lbl { font-size:10px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.5px; }
+
+    /* Radial gauge */
+    .gauge { position:relative; width:120px; height:120px; }
+    .gauge svg { transform:rotate(-90deg); }
+    .gauge-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .gauge-center .g-num { font-size:20px; font-weight:800; }
+    .gauge-center .g-lbl { font-size:10px; color:var(--text-tertiary); }
+
+    /* sparkline */
+    .spark { width:100%; height:46px; }
+    .spark path { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* activity feed */
+    .feed { display:flex; flex-direction:column; gap:2px; max-height:220px; overflow-y:auto; }
+    .feed-item { display:flex; align-items:center; gap:12px; padding:10px 8px; border-radius:var(--radius-sm); transition:background .2s ease; }
+    .feed-item:hover { background:var(--bg); }
+    .feed-dot { width:9px; height:9px; border-radius:50%; flex:0 0 auto; box-shadow:0 0 0 4px rgba(29,201,234,.12); }
+    .feed-body { flex:1; min-width:0; }
+    .feed-title { font-size:13px; font-weight:600; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .feed-sub { font-size:11px; color:var(--text-tertiary); }
+    .feed-time { font-size:10px; color:var(--text-tertiary); white-space:nowrap; }
+
+    .kpi-strip { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:4px; }
+    .kpi-chip { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; padding:5px 12px; border-radius:50px; background:var(--bg-elevated); border:1px solid var(--border); color:var(--text-secondary); }
+    .kpi-chip b { color:var(--text-primary); }
+
+    .analytic-card { transition:transform .25s ease, border-color .25s ease; }
+    .analytic-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+
+    /* ===== Custom select (beautiful dropdown) ===== */
+    .csel { position:relative; }
+    .csel-trigger { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-elevated); color:var(--text-primary); font-size:14px; cursor:pointer; transition:var(--transition); font-family:var(--font); }
+    .csel-trigger:hover { border-color:var(--border-light); }
+    .csel.open .csel-trigger { border-color:var(--accent); box-shadow:0 0 0 3px rgba(29,201,234,.15); }
+    .csel-trigger .csel-caret { transition:transform .2s ease; color:var(--text-tertiary); flex:0 0 auto; }
+    .csel.open .csel-caret { transform:rotate(180deg); }
+    .csel-menu { position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:50; background:var(--card); border:1px solid var(--border-light); border-radius:var(--radius); box-shadow:var(--shadow-lg); padding:6px; max-height:260px; overflow-y:auto; opacity:0; transform:translateY(-6px) scale(.98); pointer-events:none; transition:opacity .18s ease, transform .18s ease; }
+    .csel.open .csel-menu { opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+    .csel-opt { display:flex; align-items:center; gap:8px; padding:9px 10px; border-radius:var(--radius-sm); font-size:13px; cursor:pointer; color:var(--text-secondary); transition:background .15s ease; }
+    .csel-opt:hover { background:var(--bg-elevated); color:var(--text-primary); }
+    .csel-opt.active { color:var(--accent); background:var(--accent-bg); font-weight:600; }
+    .csel-opt .dot { width:8px; height:8px; border-radius:50%; flex:0 0 auto; }
+    .csel-multi .csel-opt .box { width:16px; height:16px; border-radius:5px; border:1.5px solid var(--border-light); display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+    .csel-multi .csel-opt.active .box { background:var(--accent); border-color:var(--accent); }
+    .csel-multi .csel-opt .box svg { width:10px; height:10px; stroke:#0f172a; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:18; stroke-dashoffset:18; transition:stroke-dashoffset .2s ease; }
+    .csel-multi .csel-opt.active .box svg { stroke-dashoffset:0; }
+    .csel-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+    .csel-tag { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; padding:3px 8px; border-radius:50px; background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent); }
+    .csel-tag button { border:none; background:none; color:inherit; cursor:pointer; font-size:13px; line-height:1; padding:0; }
+
+    /* confirmation dialog */
+    .modal.confirm { max-width:420px; text-align:center; }
+    .confirm-icon { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px; animation:scaleBounce .5s cubic-bezier(.34,1.56,.64,1); }
+    .confirm-icon.danger { background:var(--red-bg); border:1px solid var(--red); }
+    .confirm-icon.warn { background:var(--orange-bg); border:1px solid var(--orange); }
+    .confirm-icon.info { background:var(--accent-bg); border:1px solid var(--accent); }
+    .confirm-icon svg { width:30px; height:30px; }
+    .confirm-icon.danger svg { stroke:var(--red); } .confirm-icon.warn svg { stroke:var(--orange); } .confirm-icon.info svg { stroke:var(--accent); }
+    .confirm-icon svg { fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* inline row status editor */
+    .row-status-edit { display:inline-flex; gap:4px; align-items:center; }
+    .mini-sel { font-size:11px; padding:4px 8px; border-radius:var(--radius-sm); border:1.5px solid var(--border); background:var(--bg-elevated); color:var(--text-primary); }
+    .save-flash { animation:saveFlash .6s ease; }
+    @keyframes saveFlash { 0%{background:var(--green-bg);} 100%{background:transparent;} }
+
+    /* project page cards */
+    .pgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+    .pcard { background:var(--card); border:1px solid var(--border-light); border-radius:var(--radius-lg); padding:18px; transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+    .pcard:hover { transform:translateY(-3px); border-color:var(--accent); box-shadow:var(--shadow); }
+    .pcard h4 { font-size:15px; font-weight:700; color:var(--text-primary); margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+    .pcard .pmeta { font-size:12px; color:var(--text-secondary); margin:4px 0; word-break:break-all; }
+    .pcard .pchips { display:flex; flex-wrap:wrap; gap:6px; margin:10px 0; }
+    .pcard .pactions { display:flex; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+
+    .tab-btn { position:relative; overflow:hidden; font-weight:600; }
+    .tab-btn.active { box-shadow:0 4px 14px rgba(29,201,234,.25); }
+    .dash-header { background:linear-gradient(135deg,var(--card),var(--bg-elevated)); border:1px solid var(--border-light); }
+    .live-dot { width:7px; height:7px; border-radius:50%; background:var(--green); display:inline-block; margin-right:6px; animation:pulse 2s infinite; }
+
+    .form-group { margin-bottom:16px; flex:1; min-width:220px; }
+    .form-group label { display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:5px; letter-spacing:0.3px; text-transform:uppercase; }
+    .req { color:var(--red); }
+    .form-row { display:flex; gap:16px; flex-wrap:wrap; }
+
+    select, textarea,
+    input[type=text], input[type=email], input[type=url], input[type=number], input[type=search], input[type=password],
+    input[type=tel], input[type=date] {
+      width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm);
+      font-size:14px; font-family:var(--font); transition:var(--transition);
+      background:var(--bg-elevated); color:var(--text-primary); appearance:none;
+    }
+    input:focus, select:focus, textarea:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(29,201,234,0.15); }
+    input.error, select.error { border-color:var(--red); box-shadow:0 0 0 3px rgba(239,68,68,0.1); }
+    input[readonly] { background:var(--bg); cursor:default; }
+    input[type=date] { color-scheme:light dark; }
+
+    .field-error { font-size:12px; color:var(--red); margin-top:4px; display:none; align-items:center; gap:4px; }
+    .field-error.show { display:flex; }
+
+    .step-group { border:1px solid var(--border); border-radius:var(--radius); margin-bottom:12px; overflow:hidden; }
+    .step-header { display:flex; align-items:center; gap:12px; padding:14px 18px; cursor:pointer; background:var(--bg-elevated); user-select:none; transition:var(--transition); }
+    .step-header:hover { background:var(--card-hover); }
+    .step-num { width:26px; height:26px; border-radius:50%; background:var(--accent); color:#0f172a; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+    .step-label { font-size:14px; font-weight:600; color:var(--text-primary); flex:1; }
+    .step-arrow { width:8px; height:8px; border-right:2px solid var(--text-tertiary); border-bottom:2px solid var(--text-tertiary); transform:rotate(45deg); transition:transform 0.25s; flex-shrink:0; }
+    .step-arrow.open { transform:rotate(-135deg); }
+    .step-body { padding:0 18px; max-height:0; overflow:hidden; transition:max-height 0.3s ease, padding 0.3s ease; }
+    .step-body.open { max-height:4000px; padding:18px; }
+    .step-nav { display:flex; gap:12px; justify-content:flex-end; margin-top:18px; padding-top:14px; border-top:1px dashed var(--border); }
+    .step-nav .btn { flex:0 0 auto; }
+
+    .upload-zone { border:2px dashed var(--border); border-radius:var(--radius); padding:28px; text-align:center; cursor:pointer; transition:var(--transition); background:var(--bg-elevated); }
+    .upload-zone:hover, .upload-zone.dragover { border-color:var(--accent); background:var(--accent-bg); }
+    .upload-zone.has-file { border-color:var(--green); background:var(--green-bg); }
+    .upload-label { font-size:14px; font-weight:600; color:var(--text-secondary); }
+    .upload-sub { font-size:12px; color:var(--text-tertiary); margin-top:4px; }
+    .file-name { font-size:13px; color:var(--green); margin-top:6px; font-weight:500; }
+    .upload-icon-wrap { width:40px; height:40px; border-radius:50%; background:var(--accent-bg); display:flex; align-items:center; justify-content:center; margin:0 auto 10px; }
+    .upload-icon-wrap svg { width:20px; height:20px; fill:var(--accent); }
+
+    .tabs { display:flex; gap:4px; background:var(--card); border-radius:var(--radius-lg); padding:6px; box-shadow:var(--shadow-sm); border:1px solid var(--border); margin-bottom:20px; flex-wrap:wrap; }
+    .tab-btn { padding:10px 20px; border:none; background:transparent; cursor:pointer; font-size:13px; font-weight:500; font-family:var(--font); color:var(--text-secondary); border-radius:var(--radius); transition:var(--transition); }
+    .tab-btn:hover { background:var(--bg-elevated); color:var(--text-primary); }
+    .tab-btn.active { background:var(--accent); color:#0f172a; }
+
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:var(--bg); padding:12px 14px; text-align:left; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-secondary); border-bottom:1.5px solid var(--border); white-space:nowrap; }
+    td { padding:10px 14px; border-bottom:1px solid var(--border-light); vertical-align:middle; }
+    tr:hover td { background:var(--bg); }
+    tr:last-child td { border-bottom:none; }
+
+    .status-pill { display:inline-flex; align-items:center; gap:6px; padding:3px 12px; border-radius:50px; font-size:12px; font-weight:600; }
+    .pill-green { background:var(--green-bg); color:var(--green); border:1px solid var(--green); }
+    .pill-orange { background:var(--orange-bg); color:var(--orange); border:1px solid var(--orange); }
+    .pill-accent { background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent); }
+    .pill-red { background:var(--red-bg); color:var(--red); border:1px solid var(--red); }
+    .pill-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .pill-dot.green { background:var(--green); }
+    .pill-dot.orange { background:var(--orange); }
+    .pill-dot.accent { background:var(--accent); }
+    .pill-dot.red { background:var(--red); }
+
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(8px); }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--card); border-radius:var(--radius-xl); padding:32px; max-width:480px; width:100%; box-shadow:var(--shadow-lg); max-height:90vh; overflow-y:auto; }
+    .modal h3 { font-size:18px; font-weight:700; margin-bottom:4px; color:var(--text-primary); }
+    .modal p { font-size:14px; color:var(--text-secondary); margin-bottom:20px; line-height:1.4; }
+    .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; padding-top:16px; border-top:1px solid var(--border-light); }
+
+    .toast-container { position:fixed; top:16px; right:16px; z-index:2000; display:flex; flex-direction:column; gap:8px; max-width:400px; }
+    .toast { padding:12px 18px; border-radius:var(--radius); box-shadow:var(--shadow-lg); font-size:13px; font-weight:500; display:flex; align-items:center; gap:10px; animation:slideIn 0.35s ease; }
+    .toast-accent { background:var(--accent-bg); color:var(--accent); border-color:var(--accent); }
+    .toast-green { background:var(--green-bg); color:var(--green); border-color:var(--green); }
+    .toast-red { background:var(--red-bg); color:var(--red); border-color:var(--red); }
+    .toast-orange { background:var(--orange-bg); color:var(--orange); border-color:var(--orange); }
+    .toast-icon { width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .toast-icon svg { width:12px; height:12px; fill:#fff; }
+    @keyframes slideIn { from { transform:translateX(40px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+
+    .spinner-overlay { display:none; position:fixed; inset:0; background:rgba(255,255,255,0.8); z-index:3000; align-items:center; justify-content:center; flex-direction:column; gap:16px; backdrop-filter:blur(4px); }
+    .spinner-overlay.active { display:flex; }
+    .spinner { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.65s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .spinner-text { font-size:14px; font-weight:600; color:var(--text-secondary); }
+
+    .result-section { display:none; margin-top:28px; animation:fadeSlideUp 0.5s ease; }
+    .result-section.show { display:block; }
+    @keyframes fadeSlideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .result-hero { text-align:center; padding:36px 24px; }
+    .result-icon-wrap { width:88px; height:88px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; animation:scaleBounce 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+    .result-icon-wrap.success { background:var(--green-bg); border:1px solid var(--green); }
+    .result-icon-wrap.fail { background:var(--red-bg); border:1px solid var(--red); }
+    @keyframes scaleBounce { 0% { transform:scale(0); } 60% { transform:scale(1.15); } 100% { transform:scale(1); } }
+    .result-icon-wrap svg { width:40px; height:40px; }
+    .result-icon-wrap svg .check-circle { fill:none; stroke:var(--green); stroke-width:6; stroke-dasharray:340; stroke-dashoffset:340; animation:drawCircle 0.6s ease forwards; }
+    .result-icon-wrap svg .check-path { fill:none; stroke:var(--green); stroke-width:6; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:80; stroke-dashoffset:80; animation:drawTick 0.4s ease 0.45s forwards; }
+    .result-icon-wrap svg .x-circle { fill:none; stroke:var(--red); stroke-width:6; stroke-dasharray:340; stroke-dashoffset:340; animation:drawCircle 0.6s ease forwards; }
+    .result-icon-wrap svg .x-path { fill:none; stroke:var(--red); stroke-width:6; stroke-linecap:round; stroke-dasharray:56; stroke-dashoffset:56; animation:drawTick 0.35s ease 0.5s forwards; }
+    .result-icon-wrap svg .x-path-2 { fill:none; stroke:var(--red); stroke-width:6; stroke-linecap:round; stroke-dasharray:56; stroke-dashoffset:56; animation:drawTick 0.35s ease 0.6s forwards; }
+    @keyframes drawCircle { to { stroke-dashoffset:0; } }
+    @keyframes drawTick { to { stroke-dashoffset:0; } }
+    .result-title { font-size:22px; font-weight:700; color:var(--text-primary); margin-bottom:4px; }
+    .result-subtitle { font-size:14px; color:var(--text-secondary); margin-bottom:12px; }
+    .result-code { font-size:32px; font-weight:800; letter-spacing:1px; font-family:var(--mono); background:linear-gradient(135deg,var(--accent),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; padding:12px 0; }
+    .result-fail-reason { background:var(--red-bg); border:1px solid rgba(239,68,68,0.2); border-radius:var(--radius); padding:16px 20px; margin:12px 0; text-align:left; }
+    .result-fail-reason .fail-label { font-size:11px; font-weight:600; color:var(--red); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+    .result-fail-reason .fail-text { font-size:14px; color:var(--text-primary); line-height:1.4; }
+    .result-detail-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; background:var(--bg); border-radius:var(--radius); padding:20px; margin-top:16px; }
+    .result-detail-item { padding:6px 0; }
+    .result-detail-label { font-size:11px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:2px; }
+    .result-detail-value { font-size:14px; color:var(--text-primary); font-weight:500; }
+    .result-actions { display:flex; gap:12px; margin-top:20px; flex-wrap:wrap; }
+    .result-actions .btn { flex:1; justify-content:center; min-width:140px; }
+
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:20px; }
+    .stat-card { background:var(--card); border-radius:var(--radius-lg); padding:18px 20px; box-shadow:var(--shadow-sm); border:1px solid var(--border-light); }
+    .stat-num { font-size:28px; font-weight:700; color:var(--text-primary); letter-spacing:-0.5px; }
+    .stat-label { font-size:11px; color:var(--text-secondary); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+    .stat-accent { width:32px; height:3px; border-radius:2px; margin-bottom:8px; }
+
+    .search-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+    .search-bar input { flex:1; min-width:200px; padding-left:36px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:12px center; }
+    .search-bar select { width:auto; min-width:130px; padding-right:30px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2386868b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; }
+
+    .pagination-bar { display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:13px; color:var(--text-secondary); flex-wrap:wrap; gap:8px; }
+
+    .action-group { display:flex; gap:4px; flex-wrap:nowrap; }
+
+    .dash-header {
+      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+      margin-bottom:20px; background:var(--card); border-radius:var(--radius-lg); padding:16px 24px;
+      box-shadow:var(--shadow-sm); border:1px solid var(--border-light);
+    }
+    .dash-header-left { display:flex; align-items:center; gap:14px; }
+    .dash-icon { width:40px; height:40px; border-radius:var(--radius); background:linear-gradient(135deg,var(--accent),var(--purple)); display:flex; align-items:center; justify-content:center; }
+    .dash-icon svg { width:20px; height:20px; fill:#fff; }
+    .dash-title { font-size:18px; font-weight:700; color:var(--text-primary); }
+    .dash-subtitle { font-size:13px; color:var(--text-secondary); }
+    .dash-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+    .empty-state { text-align:center; padding:60px 20px; color:var(--text-tertiary); }
+    .empty-icon-wrap { width:56px; height:56px; border-radius:50%; background:var(--bg); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; }
+    .empty-icon-wrap svg { width:24px; height:24px; fill:var(--text-tertiary); }
+    .empty-title { font-size:16px; font-weight:600; color:var(--text-secondary); }
+    .empty-sub { font-size:13px; margin-top:4px; }
+
+    .hide { display:none !important; }
+    .truncate { max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .cell-mono { font-family:var(--mono); white-space:nowrap; }
+    .cell-date { white-space:nowrap; }
+
+    .card { transition:transform 0.25s cubic-bezier(0.25,0.1,0.25,1), box-shadow 0.25s ease; }
+    .card:hover { transform:translateY(-2px); }
+    input:focus, select:focus, textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(29,201,234,0.15), 0 1px 2px rgba(0,0,0,0.05); }
+    select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2386868b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; }
+    .hero::before { animation:floatBlob 8s ease-in-out infinite; }
+    .hero::after { animation:floatBlob 10s ease-in-out infinite reverse; }
+    @keyframes floatBlob { 0%,100% { transform:translate(0,0) scale(1); } 33% { transform:translate(30px,-30px) scale(1.1); } 66% { transform:translate(-20px,20px) scale(0.9); } }
+    .btn { position:relative; overflow:hidden; }
+    .btn::after { content:''; position:absolute; inset:0; background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.12) 50%,transparent 70%); transform:translateX(-100%); transition:transform 0.6s; }
+    .btn:hover::after { transform:translateX(100%); }
+    .upload-zone { transition:all 0.3s cubic-bezier(0.25,0.1,0.25,1); }
+    .upload-zone:hover { transform:scale(1.01); }
+    .step-header { transition:background 0.2s, transform 0.2s; }
+    .step-header:hover { transform:translateX(2px); }
+
+    [data-theme="light"] .hero { background:linear-gradient(135deg,#ffffff 0%,#f0fdfa 50%,#e0f2fe 100%); border-color:var(--border); }
+    [data-theme="light"] .hero::before { background:radial-gradient(circle,rgba(8,145,178,0.10) 0%,transparent 70%); }
+    [data-theme="light"] .hero::after { background:radial-gradient(circle,rgba(8,145,178,0.07) 0%,transparent 70%); }
+    [data-theme="light"] .spinner-overlay { background:rgba(255,255,255,0.7); }
+    [data-theme="light"] .modal-overlay { background:rgba(15,23,42,0.35); }
+    [data-theme="light"] .btn-accent { color:#fff; }
+    [data-theme="light"] .dash-icon { background:linear-gradient(135deg,var(--accent),var(--purple)); }
+    [data-theme="light"] input, [data-theme="light"] select, [data-theme="light"] textarea { background:var(--bg-elevated); }
+    [data-theme="light"] input[readonly] { background:var(--bg); }
+    [data-theme="light"] th { background:var(--bg); }
+    [data-theme="light"] tr:hover td { background:var(--bg-elevated); }
+    [data-theme="light"] .toast-accent { border-color:var(--accent); }
+
+    .same-check {
+      display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; font-weight:500;
+      color:var(--text-primary); user-select:none; padding:10px 14px; border:1.5px solid var(--border);
+      border-radius:var(--radius-sm); background:var(--bg-elevated); transition:var(--transition); width:100%;
+    }
+    .same-check:hover { border-color:var(--accent); }
+    .same-check input { position:absolute; opacity:0; width:0; height:0; }
+    .same-check .box {
+      width:20px; height:20px; border-radius:6px; border:2px solid var(--border-light); flex-shrink:0;
+      display:flex; align-items:center; justify-content:center; background:var(--card); transition:var(--transition);
+    }
+    .same-check .box svg { width:12px; height:12px; fill:none; stroke:#fff; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:22; stroke-dashoffset:22; transition:stroke-dashoffset 0.25s ease; }
+    .same-check.checked { border-color:var(--accent); background:var(--accent-bg); color:var(--accent); }
+    .same-check.checked .box { background:var(--accent); border-color:var(--accent); }
+    .same-check.checked .box svg { stroke-dashoffset:0; }
+
+    html { scroll-behavior:smooth; }
+    *:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+
+    .badge-blue { background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent); }
+
+    .modal-overlay.open .modal { animation:modalIn 0.32s cubic-bezier(0.2,0.8,0.2,1); }
+    @keyframes modalIn { from { transform:translateY(24px) scale(0.97); opacity:0; } to { transform:translateY(0) scale(1); opacity:1; } }
+
+    .form-progress { padding:14px 24px 6px; }
+    .progress-track { height:6px; border-radius:50px; background:var(--border); overflow:hidden; }
+    .progress-fill { height:100%; width:0%; border-radius:50px; background:linear-gradient(90deg,var(--accent),var(--purple)); transition:width 0.45s cubic-bezier(0.2,0.8,0.2,1); }
+
+    .field-shake { animation:shake 0.4s; }
+    @keyframes shake { 0%,100%{transform:translateX(0);} 20%{transform:translateX(-6px);} 40%{transform:translateX(6px);} 60%{transform:translateX(-4px);} 80%{transform:translateX(4px);} }
+
+    .btn.loading { color:transparent !important; pointer-events:none; position:relative; }
+    .btn.loading::before { content:''; position:absolute; left:50%; top:50%; width:16px; height:16px; margin:-8px 0 0 -8px; border:2px solid rgba(255,255,255,0.45); border-top-color:#fff; border-radius:50%; animation:spin 0.6s linear infinite; }
+
+    .card-enter { animation:cardEnter 0.5s cubic-bezier(0.2,0.8,0.2,1) both; }
+    @keyframes cardEnter { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+    .toast { box-shadow:var(--shadow-lg); border:1px solid var(--border-light); }
+    .field-hint { font-size:11px; color:var(--text-tertiary); margin-top:4px; }
+
+    input:hover, select:hover, textarea:hover { border-color:var(--border-light); }
+    .step-header .step-num { transition:box-shadow 0.25s, transform 0.25s; }
+    .step-group.open .step-num { box-shadow:0 0 0 4px var(--accent-bg); transform:scale(1.05); }
+
+    .empty-icon-wrap { transition:transform 0.3s; }
+    .empty-state:hover .empty-icon-wrap { transform:scale(1.08); }
+
+    @media (max-width:768px) {
+      .hero { padding:28px 20px; }
+      .hero h1 { font-size:24px; }
+      .card-header { padding:14px 16px; }
+      .card-body { padding:14px 16px; }
+      .form-row { flex-direction:column; gap:0; }
+      .form-group { min-width:100%; }
+      .step-nav { flex-direction:column; }
+      .step-nav .btn { width:100%; }
+      .code-value { font-size:24px; }
+      .stats-grid { grid-template-columns:repeat(2,1fr); }
+      .search-bar { flex-direction:column; }
+      .search-bar select, .search-bar input { width:100%; }
+      .bulk-btns { flex-direction:column; width:100%; }
+      .bulk-btns .btn { width:100%; }
+      .edit-grid { grid-template-columns:1fr; }
+      .project-layout { flex-direction:column; }
+      .project-form, .project-list { width:100%; }
+      .modal { padding:20px; }
+      .modal-content { width:100%; }
+      td, th { padding:8px 10px; }
+      .dash-header { padding:12px 16px; }
+    }
+    .bulk-bar { display:none; align-items:center; gap:10px; padding:8px 0; flex-wrap:wrap; }
+    .bulk-bar .sel-info { font-size:13px; color:var(--text-secondary); flex:1; }
+    .row-check, .check-all { width:16px; height:16px; cursor:pointer; accent-color:var(--accent); }
+    .table-wrap { overflow-x:auto; border:1px solid var(--border-light); border-radius:var(--radius); position:relative; }
+    .table-wrap table { min-width:100%; border-collapse:separate; border-spacing:0; }
+    .action-col { position:sticky; right:0; background:var(--bg-card); z-index:2; box-shadow:-3px 0 6px rgba(0,0,0,0.05); }
+    .sticky-left { position:sticky; left:0; background:var(--bg-card); z-index:2; }
+    .table-wrap th, .table-wrap td { white-space:nowrap; }
+    .table-wrap td.cell-mono { white-space:normal; word-break:break-word; overflow-wrap:anywhere; }
+    .table-wrap td.cell-date { white-space:normal; }
+    .col-filter-icon { display:inline-flex; width:10px; height:10px; cursor:pointer; opacity:0.35; vertical-align:middle; margin-left:3px; }
+    .col-filter-icon:hover, .col-filter-icon.active { opacity:1; color:var(--accent); }
+    .col-filter-menu { display:none; position:fixed; min-width:180px; max-height:240px; overflow-y:auto; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-lg); z-index:500; padding:4px 0; }
+    .col-filter-menu.show { display:block; }
+    .col-filter-menu .fi { padding:5px 10px; display:flex; align-items:center; gap:6px; font-size:12px; cursor:pointer; }
+    .col-filter-menu .fi:hover { background:var(--accent-bg); }
+    .col-filter-menu .fi input[type="checkbox"] { width:13px; height:13px; accent-color:var(--accent); pointer-events:none; }
+    .col-filter-menu .fc { padding:5px 10px; font-size:11px; color:var(--accent); cursor:pointer; border-top:1px solid var(--border); text-align:center; }
+    .col-filter-menu .fc:hover { background:var(--accent-bg); }
+    .filter-badge { color:var(--accent); font-size:10px; }
+    .tick-yes { color:var(--green); font-weight:700; font-size:16px; line-height:1; }
+    .tick-no { color:var(--text-tertiary); font-size:14px; line-height:1; }
+
+    .edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .edit-grid .fg { margin:0; }
+    .edit-grid .full { grid-column:1/-1; }
+    .edit-grid label { font-size:12px; }
+    .edit-grid input, .edit-grid select, .edit-grid textarea { padding:8px 10px; font-size:13px; }
+
+    .project-layout { display:flex; gap:20px; flex-wrap:wrap; }
+    .project-layout .project-list { flex:2; min-width:350px; }
+    .project-layout .project-form { flex:1; min-width:280px; }
+    .project-layout .project-form .pf-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .project-layout .project-form .pf-row .fg { flex:1; min-width:140px; }
+    .project-layout .project-form .fg label { font-size:12px; }
+
+    [data-theme="light"] .action-col, [data-theme="light"] .sticky-left { background:#fff; }
+
+    /* ============================================================
+       MEGA UI/UX UPGRADE  (additive only — preserves all JS hooks)
+       ============================================================ */
+
+    /* Smooth theme transitions on key surfaces (GPU-safe props only) */
+    body, .card, .modal, .dash-header, .analytic-card, .stat-card, .pcard,
+    .tabs, .kpi-chip, .hero, th, td, .table-wrap {
+      transition-property: background-color, color, border-color, box-shadow;
+      transition-duration: .4s;
+      transition-timing-function: cubic-bezier(.25,.1,.25,1);
+    }
+
+    /* ---- Animated aurora / gradient-mesh background ---- */
+    body::before {
+      content:''; position:fixed; inset:-20%; z-index:-2; pointer-events:none;
+      background:
+        radial-gradient(40% 40% at 18% 22%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 70%),
+        radial-gradient(38% 38% at 82% 18%, color-mix(in srgb, var(--purple) 18%, transparent), transparent 70%),
+        radial-gradient(45% 45% at 70% 85%, color-mix(in srgb, var(--teal) 16%, transparent), transparent 72%),
+        radial-gradient(40% 40% at 25% 80%, color-mix(in srgb, var(--accent-light) 14%, transparent), transparent 72%);
+      background-repeat:no-repeat;
+      opacity:.55; filter:saturate(1.1);
+    }
+    [data-theme="light"] body::before { opacity:.35; }
+    body::after {
+      content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
+      background-image:
+        linear-gradient(color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--border) 40%, transparent) 1px, transparent 1px);
+      background-size:46px 46px;
+      -webkit-mask-image:radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+      mask-image:radial-gradient(circle at 50% 30%, #000 0%, transparent 78%);
+      opacity:.25;
+    }
+
+    @keyframes auroraDrift {
+      0%   { transform:translate3d(0,0,0) scale(1); }
+      33%  { transform:translate3d(2%,-2%,0) scale(1.06); }
+      66%  { transform:translate3d(-2%,1.5%,0) scale(.97); }
+      100% { transform:translate3d(0,0,0) scale(1); }
+    }
+    @keyframes floatUp {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes shimmerSpin { to { transform:rotate(360deg); } }
+    @keyframes dotPulse {
+      0%,100% { box-shadow:0 0 0 0 currentColor; opacity:1; }
+      50%     { box-shadow:0 0 0 5px transparent; opacity:.7; }
+    }
+
+    /* ---- Glassmorphism on primary surfaces ---- */
+    .card, .modal, .dash-header, .tabs {
+      background:color-mix(in srgb, var(--card) 78%, transparent);
+      backdrop-filter:blur(16px) saturate(1.2);
+      -webkit-backdrop-filter:blur(16px) saturate(1.2);
+      border:1px solid color-mix(in srgb, var(--border-light) 70%, transparent);
+      box-shadow:var(--shadow), inset 0 1px 0 color-mix(in srgb, #fff 8%, transparent);
+    }
+    [data-theme="light"] .card, [data-theme="light"] .modal,
+    [data-theme="light"] .dash-header, [data-theme="light"] .tabs {
+      background:color-mix(in srgb, var(--card) 85%, transparent);
+      box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.6);
+    }
+
+    /* ---- HERO: aurora + floating badge + richer glow ---- */
+    .hero { background:linear-gradient(135deg, color-mix(in srgb, var(--card) 92%, transparent), var(--bg-elevated) 55%, color-mix(in srgb, var(--accent) 8%, var(--bg))); }
+    .hero-badge { animation:floatUp .6s ease both, badgeBob 4s ease-in-out 1s infinite; }
+    @keyframes badgeBob { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-3px);} }
+    .hero h1 { background:linear-gradient(120deg,var(--text-primary) 0%, var(--accent) 55%, var(--purple) 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+
+    /* ---- STAT CARDS: glass icon chip, gradient bar, conic shimmer, glow ---- */
+    .stat-card { background:color-mix(in srgb, var(--card) 80%, transparent); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); }
+    .stat-card::after {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:3px;
+      background:linear-gradient(90deg,var(--accent),var(--purple),var(--teal));
+      background-size:200% 100%; opacity:.9; animation:barSlide 6s linear infinite;
+    }
+    @keyframes barSlide { to { background-position:200% 0; } }
+    .stat-card > .shimmer-ring, .stat-card::before { pointer-events:none; }
+    .stat-card:hover { box-shadow:var(--shadow-lg), 0 0 32px color-mix(in srgb, var(--accent) 30%, transparent); }
+    .stat-icon {
+      background:color-mix(in srgb, var(--accent) 14%, transparent);
+      border:1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+      backdrop-filter:blur(6px); box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 4px 12px rgba(0,0,0,.15);
+      transition:transform .35s cubic-bezier(.2,.8,.2,1);
+    }
+    .stat-card:hover .stat-icon { transform:rotate(-8deg) scale(1.08); }
+
+    /* ---- 3D BAR CHART: side face depth, sheen, hover lift ---- */
+    .bar3d-bar { overflow:visible; }
+    .bar3d-bar::before {
+      content:''; position:absolute; top:0; bottom:0; right:-7px; width:7px;
+      background:linear-gradient(180deg, color-mix(in srgb,#000 25%, var(--accent)), color-mix(in srgb,#000 45%, var(--accent)));
+      border-radius:0 6px 0 0; transform:skewY(-38deg); transform-origin:top; opacity:.55;
+    }
+    .bar3d:nth-child(odd) .bar3d-bar::before {
+      background:linear-gradient(180deg, color-mix(in srgb,#000 25%, var(--purple)), color-mix(in srgb,#000 45%, var(--purple)));
+    }
+    .bar3d-bar { position:relative; }
+    .bar3d-bar > .sheen, .bar3d-bar::after { will-change:transform; }
+    .bar3d { transition:transform .3s ease; }
+    .bar3d:hover { transform:translateY(-6px); }
+    .bar3d:hover .bar3d-bar { box-shadow:0 -8px 26px color-mix(in srgb,var(--accent) 45%, transparent), inset 0 1px 0 rgba(255,255,255,.35); }
+    @media (prefers-reduced-motion:no-preference) {
+      .bar3d-bar { background-image:linear-gradient(180deg,var(--accent-light),var(--accent)), linear-gradient(120deg,transparent 40%,rgba(255,255,255,.28) 50%,transparent 60%); background-size:100% 100%, 200% 100%; background-repeat:no-repeat; animation:barSheen 3.5s ease-in-out infinite; }
+      .bar3d:nth-child(odd) .bar3d-bar { background-image:linear-gradient(180deg,var(--purple-light),var(--purple)), linear-gradient(120deg,transparent 40%,rgba(255,255,255,.28) 50%,transparent 60%); }
+      @keyframes barSheen { 0%,100%{ background-position:0 0, -60% 0;} 50%{ background-position:0 0, 160% 0;} }
+    }
+
+    /* ---- DONUT + GAUGE: glow, drop shadow, rotating conic backdrop ---- */
+    .donut-big::before, .gauge::before {
+      content:''; position:absolute; inset:-8px; border-radius:50%; z-index:0;
+      background:conic-gradient(from 0deg, color-mix(in srgb,var(--accent) 22%, transparent), transparent 30%, color-mix(in srgb,var(--purple) 22%, transparent) 60%, transparent 80%, color-mix(in srgb,var(--accent) 22%, transparent));
+      filter:blur(9px); opacity:.6; animation:shimmerSpin 14s linear infinite;
+    }
+    .donut-big svg, .gauge svg { position:relative; z-index:1; overflow:visible; filter:drop-shadow(0 4px 14px rgba(0,0,0,.35)); }
+    .donut-seg { filter:drop-shadow(0 0 4px color-mix(in srgb, currentColor 60%, transparent)); }
+    .gauge-arc { filter:drop-shadow(0 0 6px color-mix(in srgb,var(--accent) 55%, transparent)); }
+    .donut-center, .gauge-center { z-index:2; }
+
+    /* ---- FEED: hover slide + left accent bar, pulsing dot ---- */
+    .feed-item { position:relative; padding-left:14px; }
+    .feed-item::before {
+      content:''; position:absolute; left:0; top:8px; bottom:8px; width:3px; border-radius:3px;
+      background:linear-gradient(180deg,var(--accent),var(--purple)); transform:scaleY(0); transform-origin:center;
+      transition:transform .25s ease;
+    }
+    .feed-item:hover { transform:translateX(4px); }
+    .feed-item:hover::before { transform:scaleY(1); }
+    @media (prefers-reduced-motion:no-preference) {
+      .feed-dot { color:var(--accent); animation:dotPulse 2.2s ease-in-out infinite; }
+    }
+
+    /* ---- KPI CHIP: glass + gradient border ---- */
+    .kpi-chip {
+      background:color-mix(in srgb, var(--bg-elevated) 70%, transparent);
+      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+      border:1px solid transparent;
+      background-image:linear-gradient(color-mix(in srgb,var(--bg-elevated) 80%,transparent),color-mix(in srgb,var(--bg-elevated) 80%,transparent)), linear-gradient(120deg,color-mix(in srgb,var(--accent) 55%,transparent),color-mix(in srgb,var(--purple) 55%,transparent));
+      background-origin:border-box; background-clip:padding-box, border-box;
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .kpi-chip:hover { transform:translateY(-2px); box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 22%, transparent); }
+
+    /* ---- TABS: glass pill + animated underline glow on active ---- */
+    .tab-btn { transition:color .25s ease, background .25s ease; }
+    .tab-btn::after {
+      content:''; position:absolute; left:16%; right:16%; bottom:4px; height:3px; border-radius:3px;
+      background:linear-gradient(90deg,var(--accent),var(--purple)); opacity:0; transform:scaleX(.3);
+      transition:opacity .3s ease, transform .3s cubic-bezier(.2,.8,.2,1); z-index:1;
+    }
+    .tab-btn.active::after { opacity:1; transform:scaleX(1); box-shadow:0 2px 10px color-mix(in srgb,var(--accent) 55%, transparent); }
+
+    /* ---- BUTTONS: colored glow + press scale (sheen already exists) ---- */
+    .btn:active { transform:scale(.96); }
+    .btn-accent:hover { box-shadow:0 6px 20px color-mix(in srgb,var(--accent) 45%, transparent); }
+    .btn-green:hover  { box-shadow:0 6px 20px color-mix(in srgb,var(--green) 45%, transparent); }
+    .btn-orange:hover { box-shadow:0 6px 20px color-mix(in srgb,var(--orange) 45%, transparent); }
+    .btn-teal:hover   { box-shadow:0 6px 20px color-mix(in srgb,var(--teal) 45%, transparent); }
+    .btn-red:hover    { box-shadow:0 6px 20px color-mix(in srgb,var(--red) 45%, transparent); }
+    .btn-blue:hover   { box-shadow:0 6px 20px color-mix(in srgb,var(--accent) 45%, transparent); }
+
+    /* ---- TABLES: sticky blurred header, zebra, row hover gradient ---- */
+    .table-wrap thead th {
+      position:sticky; top:0; z-index:3;
+      background:color-mix(in srgb, var(--bg) 82%, transparent);
+      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    }
+    .table-wrap tbody tr:nth-child(even) td { background:color-mix(in srgb, var(--bg) 35%, transparent); }
+    .table-wrap tbody tr { transition:background .2s ease; }
+    .table-wrap tbody tr:hover td { background:linear-gradient(90deg, color-mix(in srgb,var(--accent) 12%, transparent), transparent 60%); }
+    .table-wrap tbody tr.row-enter { animation:rowEnter .42s cubic-bezier(.2,.8,.2,1) both; }
+    @keyframes rowEnter { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .table-wrap tbody tr.saved-flash td { animation:saveFlash .7s ease; }
+    .table-wrap tbody tr.saved-flash { box-shadow:inset 3px 0 0 var(--green); }
+    .table-wrap td, .table-wrap th { transition:background .2s ease, color .2s ease; }
+    .action-col {
+      background:color-mix(in srgb, var(--bg-card) 88%, transparent);
+      backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    }
+
+    /* ---- MODAL: backdrop blur-in + scale ---- */
+    .modal-overlay.open { animation:overlayIn .3s ease; }
+    @keyframes overlayIn { from { backdrop-filter:blur(0); opacity:0; } to { backdrop-filter:blur(8px); opacity:1; } }
+    .confirm-icon { box-shadow:0 0 26px color-mix(in srgb, currentColor 30%, transparent); }
+
+    /* ---- Card enter enhance ---- */
+    .card-enter { animation:floatUp .55s cubic-bezier(.2,.8,.2,1) both; }
+
+    /* ---- Aurora animation gated behind reduced-motion preference ---- */
+    @media (prefers-reduced-motion:no-preference) {
+      body::before { animation:auroraDrift 26s ease-in-out infinite; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      body::before, .stat-card::after, .donut-big::before, .gauge::before,
+      .hero-badge, .feed-dot { animation:none !important; }
+      * { scroll-behavior:auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="spinnerOverlay" class="spinner-overlay">
+  <div class="spinner"></div>
+  <div class="spinner-text" id="spinnerText">Loading...</div>
+</div>
+<div id="toastContainer" class="toast-container"></div>
+
+<div id="publicView">
+  <div class="container">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-left">
+          <img src="https://uptoskills.com/UptoSkills.webp" alt="UptoSkills" style="height:44px;width:auto;margin-bottom:16px;filter:drop-shadow(0 2px 8px rgba(29,201,234,0.3));">
+          <div class="hero-badge">Welcome Onboard!</div>
+          <h1>Intern Onboarding Portal</h1>
+          <p>Complete your registration to join the program. Fill in all required fields and upload your offer letter for verification.</p>
+        </div>
+        <div class="hero-right">
+          <button class="btn-hero" onclick="toggleTheme()" id="themeBtn" style="margin-right:8px" title="Toggle light / dark mode">
+            <svg id="themeIcon" viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"></svg>
+            <span id="themeLabel">Light</span>
+          </button>
+          <button class="btn-hero" onclick="showLogin()">HR Admin Login</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="regFormCard">
+      <div class="card-header">
+        <div class="card-title">Intern Registration <span class="badge badge-blue">Online Form</span></div>
+        <span style="font-size:12px;color:var(--text-secondary)"><span style="color:var(--red)">*</span> Required</span>
+      </div>
+
+      <div class="form-progress">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+
+      <div class="step-group open">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-num">1</span>
+          <span class="step-label">Personal &amp; Contact Information</span>
+          <span class="step-arrow open"></span>
+        </div>
+        <div class="step-body open">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" id="regName" placeholder="John Doe">
+              <div class="field-error" id="errName">Please enter your full name</div>
+            </div>
+            <div class="form-group">
+              <label>Email ID <span class="req">*</span></label>
+              <input type="email" id="regEmail" placeholder="you@college.edu.in">
+              <div class="field-error" id="errEmail">Please enter a valid email</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Mobile No <span class="req">*</span></label>
+              <input type="tel" id="regMobile" placeholder="+91 9876543210">
+              <div class="field-error" id="errMobile">Please enter mobile number</div>
+            </div>
+            <div class="form-group">
+              <label>WhatsApp No <span class="req">*</span></label>
+              <input type="tel" id="regWhatsapp" placeholder="+91 9876543210">
+              <label class="same-check" id="sameMobileWrap" for="sameMobile" style="margin-top:6px">
+                <input type="checkbox" id="sameMobile" onchange="toggleSameMobile()">
+                <span class="box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+                <span>Same as Mobile Number</span>
+              </label>
+              <div class="field-error" id="errWhatsapp">Please enter WhatsApp number</div>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;padding:10px 14px;background:var(--accent-bg);border:1px solid var(--accent);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--accent)">Current Address</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Address Line 1 <span class="req">*</span></label>
+              <input type="text" id="currAddr1" placeholder="House/Flat No, Street">
+              <div class="field-error" id="errCurrAddr1">Please enter current address</div>
+            </div>
+            <div class="form-group">
+              <label>Address Line 2</label>
+              <input type="text" id="currAddr2" placeholder="Area, Locality (optional)">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Post Office <span class="req">*</span></label>
+              <input type="text" id="currPo" placeholder="Post Office">
+              <div class="field-error" id="errCurrPo">Required</div>
+            </div>
+            <div class="form-group">
+              <label>District <span class="req">*</span></label>
+              <input type="text" id="currDistrict" placeholder="District">
+              <div class="field-error" id="errCurrDistrict">Required</div>
+            </div>
+            <div class="form-group">
+              <label>State <span class="req">*</span></label>
+              <input type="text" id="currState" placeholder="State">
+              <div class="field-error" id="errCurrState">Required</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Country <span class="req">*</span></label>
+              <select id="currCountry"><option value="">-- Select Country --</option></select>
+              <div class="field-error" id="errCurrCountry">Required</div>
+            </div>
+            <div class="form-group">
+              <label>PIN Code <span class="req">*</span></label>
+              <input type="text" id="currPin" placeholder="6-digit PIN">
+              <div class="field-error" id="errCurrPin">Required</div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;margin-bottom:12px;padding:10px 14px;background:var(--purple-bg);border:1px solid var(--purple);border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--purple)">Permanent Address</div>
+          <label class="same-check" id="sameAddressWrap" for="sameAddress" style="margin-bottom:12px">
+            <input type="checkbox" id="sameAddress" onchange="toggleSameAddress()">
+            <span class="box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <span>Same as Current Address</span>
+          </label>
+          <div id="permAddrFields">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Address Line 1 <span class="req">*</span></label>
+                <input type="text" id="permAddr1" placeholder="House/Flat No, Street">
+                <div class="field-error" id="errPermAddr1">Please enter permanent address</div>
+              </div>
+              <div class="form-group">
+                <label>Address Line 2</label>
+                <input type="text" id="permAddr2" placeholder="Area, Locality (optional)">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Post Office <span class="req">*</span></label>
+                <input type="text" id="permPo" placeholder="Post Office">
+                <div class="field-error" id="errPermPo">Required</div>
+              </div>
+              <div class="form-group">
+                <label>District <span class="req">*</span></label>
+                <input type="text" id="permDistrict" placeholder="District">
+                <div class="field-error" id="errPermDistrict">Required</div>
+              </div>
+              <div class="form-group">
+                <label>State <span class="req">*</span></label>
+                <input type="text" id="permState" placeholder="State">
+                <div class="field-error" id="errPermState">Required</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Country <span class="req">*</span></label>
+                <select id="permCountry"><option value="">-- Select Country --</option></select>
+                <div class="field-error" id="errPermCountry">Required</div>
+              </div>
+              <div class="form-group">
+                <label>PIN Code <span class="req">*</span></label>
+                <input type="text" id="permPin" placeholder="6-digit PIN">
+                <div class="field-error" id="errPermPin">Required</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-nav"><button type="button" class="btn btn-ghost" onclick="nextStep(0)">Next: Academic Details →</button></div>
+        </div>
+      </div>
+
+      <div class="step-group">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-num">2</span>
+          <span class="step-label">Academic Details</span>
+          <span class="step-arrow"></span>
+        </div>
+        <div class="step-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>College Name <span class="req">*</span></label>
+              <input type="text" id="regCollege" placeholder="University / College Name">
+              <div class="field-error" id="errCollege">Required</div>
+            </div>
+            <div class="form-group">
+              <label>Degree Name <span class="req">*</span></label>
+              <input type="text" id="regDegree" placeholder="B.Tech, B.Sc, etc.">
+              <div class="field-error" id="errDegree">Required</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Branch / Major <span class="req">*</span></label>
+              <input type="text" id="regBranch" placeholder="Computer Science, etc.">
+              <div class="field-error" id="errBranch">Required</div>
+            </div>
+            <div class="form-group">
+              <label>Enrollment No <span class="req">*</span></label>
+              <input type="text" id="regEnroll" placeholder="University Enrollment No">
+              <div class="field-error" id="errEnroll">Required</div>
+            </div>
+          </div>
+          <div class="step-nav"><button type="button" class="btn btn-ghost" onclick="prevStep(1)">← Back</button><button type="button" class="btn btn-blue" onclick="nextStep(1)">Next: Document Upload →</button></div>
+        </div>
+      </div>
+
+      <div class="step-group">
+        <div class="step-header" onclick="toggleStep(this)">
+          <span class="step-num">3</span>
+          <span class="step-label">Domain &amp; Document Upload</span>
+          <span class="step-arrow"></span>
+        </div>
+        <div class="step-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Domain / Track <span class="req">*</span></label>
+              <select id="regDomain"><option value="">-- Select Domain --</option></select>
+              <div class="field-error" id="errDomain">Please select a domain</div>
+            </div>
+            <div class="form-group">
+              <label>Onboarding Date</label>
+              <input type="date" id="regDate" readonly>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:8px">
+            <label>Offer Letter (PDF) <span class="req">*</span></label>
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-icon-wrap"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+              <div class="upload-label">Drop PDF here or click to browse</div>
+              <div class="upload-sub">Maximum 5 MB</div>
+              <div class="file-name" id="fileName"></div>
+            </div>
+            <input type="file" id="pdfInput" accept="application/pdf" style="display:none">
+            <div class="field-error" id="errFile">Please upload your offer letter PDF</div>
+          </div>
+          <div class="step-nav"><button type="button" class="btn btn-ghost" onclick="prevStep(2)">← Back</button></div>
+        </div>
+      </div>
+
+      <div style="padding:20px 24px;border-top:1px solid var(--border-light)">
+        <button id="regSubmitBtn" class="btn btn-blue" onclick="submitRegistration()" style="width:100%;justify-content:center;padding:12px">Submit Registration</button>
+      </div>
+    </div>
+
+    <div class="card result-section" id="resultScreen">
+      <div class="card-body">
+        <div class="result-hero" id="resultHero">
+          <div class="result-icon-wrap" id="resultIconWrap">
+            <svg viewBox="0 0 120 120" id="resultIconSvg">
+              <circle class="check-circle" cx="60" cy="60" r="54"/>
+              <polyline class="check-path" points="38,60 54,76 82,44"/>
+              <circle class="x-circle" cx="60" cy="60" r="54" display="none"/>
+              <line class="x-path" x1="40" y1="40" x2="80" y2="80" display="none"/>
+              <line class="x-path-2" x1="80" y1="40" x2="40" y2="80" display="none"/>
+            </svg>
+          </div>
+          <div class="result-title" id="resultTitle">Registration Successful</div>
+          <div class="result-subtitle" id="resultSubtitle">Your application has been processed.</div>
+          <div class="result-code" id="displayCode" style="display:none">USINT2025071212345</div>
+          <div class="result-fail-reason" id="resultFailReason" style="display:none">
+            <div class="fail-label">Validation Notice</div>
+            <div class="fail-text" id="resultFailText">-</div>
+          </div>
+        </div>
+        <div class="result-detail-grid">
+          <div class="result-detail-item"><div class="result-detail-label">Name</div><div class="result-detail-value" id="dName">-</div></div>
+          <div class="result-detail-item"><div class="result-detail-label">Email</div><div class="result-detail-value" id="dEmail">-</div></div>
+          <div class="result-detail-item"><div class="result-detail-label">Mobile</div><div class="result-detail-value" id="dMobile">-</div></div>
+          <div class="result-detail-item"><div class="result-detail-label">Domain</div><div class="result-detail-value" id="dDomain">-</div></div>
+          <div class="result-detail-item"><div class="result-detail-label">College</div><div class="result-detail-value" id="dCollege">-</div></div>
+          <div class="result-detail-item"><div class="result-detail-label">Degree</div><div class="result-detail-value" id="dBranch">-</div></div>
+          <div class="result-detail-item"><div class="result-detail-label">Date</div><div class="result-detail-value" id="dDate">-</div></div>
+          <div class="result-detail-item"><div class="result-detail-label">Status</div><div class="result-detail-value" id="dStatus">-</div></div>
+        </div>
+<div class="result-actions" id="resultActions">
+          <button class="btn btn-blue" id="resultEditBtn" onclick="editSubmitted()" style="display:none">Edit & Fix</button>
+          <button class="btn btn-ghost" id="resultAnotherBtn" onclick="resetAll()" style="display:none">Register Another</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="loginModal" class="modal-overlay">
+  <div class="modal">
+    <h3>HR Admin Login</h3>
+    <p>Enter your credentials to access the management dashboard.</p>
+    <div class="form-group" style="margin-bottom:4px">
+      <label>User ID</label>
+      <input type="text" id="hrUserId" placeholder="Enter HR User ID" onkeydown="if(event.key==='Enter')document.getElementById('hrPassword').focus()">
+    </div>
+    <div class="form-group" style="margin-bottom:4px">
+      <label>Password</label>
+      <input type="password" id="hrPassword" placeholder="Enter HR password" onkeydown="if(event.key==='Enter')document.querySelector('#loginModal .btn-blue').click()">
+    </div>
+    <div id="loginError" style="color:var(--red);font-size:13px;margin-top:8px;min-height:20px"></div>
+<div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('loginModal')">Cancel</button>
+      <button class="btn btn-accent" onclick="hrLogin()">Login</button>
+    </div>
+    <div style="margin-top:14px;text-align:center;border-top:1px solid var(--border);padding-top:12px">
+      <div style="font-size:12px;color:var(--muted)">Are you a Team Lead?</div>
+      <button class="btn btn-sm btn-blue" style="margin-top:6px" onclick="openTLLogin()">Team Lead Login →</button>
+    </div>
+  </div>
+</div>
+
+<div id="tlLoginModal" class="modal-overlay">
+  <div class="modal">
+    <h3>Team Lead Login</h3>
+    <p>Sign in with your group email to manage your assigned interns.</p>
+    <div class="form-group" style="margin-bottom:4px">
+      <label>Email ID</label>
+      <input type="email" id="tlEmail" placeholder="Group email from Project Details" onkeydown="if(event.key==='Enter')document.getElementById('tlPassword').focus()">
+    </div>
+    <div class="form-group" style="margin-bottom:4px">
+      <label>Password</label>
+      <input type="password" id="tlPassword" placeholder="GroupName@2026" onkeydown="if(event.key==='Enter')document.querySelector('#tlLoginModal .btn-blue').click()">
+    </div>
+    <div id="tlLoginError" style="color:var(--red);font-size:13px;margin-top:8px;min-height:20px"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('tlLoginModal')">Cancel</button>
+      <button class="btn btn-accent" onclick="tlLogin()">Login</button>
+    </div>
+  </div>
+</div>
+
+<div id="tlScreen" style="display:none">
+  <div class="container" style="max-width:1500px">
+    <div class="dash-header">
+      <div class="dash-header-left">
+        <div>
+          <div class="dash-title">Team Lead Panel</div>
+          <div class="dash-subtitle" id="tlGroupLabel">Group: —</div>
+        </div>
+      </div>
+      <div class="dash-actions">
+        <button class="btn btn-ghost btn-sm" onclick="toggleTheme()" id="themeBtnTL" title="Toggle light / dark mode">
+          <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"></svg>
+          <span id="themeLabelTL">Light</span>
+        </button>
+        <button class="btn btn-sm btn-red" onclick="tlLogout()">Logout</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Assigned Interns <span id="tlCount" class="badge badge-blue" style="font-size:11px"></span></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="text" id="tlSearch" placeholder="Search interns..." onkeyup="tlFilter()" style="width:220px">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Intern Code</th><th>Name</th><th>Email ID</th><th>Domain Name</th>
+              <th>Start Date</th><th>End Date</th><th>Current Status</th><th class="action-col">Action</th>
+            </tr></thead>
+            <tbody id="tlBody"></tbody>
+          </table>
+        </div>
+        <div id="tlEmpty" class="empty-state" style="display:none;padding:40px"><div class="empty-title">No interns assigned to your group</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tlStatusModal" class="modal-overlay">
+  <div class="modal">
+    <h3>Update Current Status</h3>
+    <p id="tlStatusSub">Change the current status for this intern.</p>
+    <div class="form-group">
+      <label>Current Status</label>
+      <select id="tlNewStatus">
+        <option value="Active">Active</option>
+        <option value="Pending Verification">Pending Verification</option>
+        <option value="Completed">Completed</option>
+        <option value="Terminated">Terminated</option>
+        <option value="Resigned">Resigned</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('tlStatusModal')">Cancel</button>
+      <button class="btn btn-accent" onclick="tlSaveStatus()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="dashboardScreen" style="display:none">
+  <div class="container" style="max-width:1500px">
+    <div class="dash-header">
+      <div class="dash-header-left">
+        <img src="https://uptoskills.com/UptoSkills.webp" alt="UptoSkills" style="height:36px;width:auto;margin-right:14px;filter:drop-shadow(0 2px 8px rgba(29,201,234,0.3));">
+        <div>
+          <div class="dash-title">HR Dashboard</div>
+          <div class="dash-subtitle">Manage intern records and configuration</div>
+        </div>
+      </div>
+        <div class="dash-actions">
+          <span id="diagCount" style="font-size:12px;color:var(--text-tertiary);font-family:var(--mono)"></span>
+          <label class="reg-switch" id="regToggleWrap">
+            <input type="checkbox" id="regToggleChk" onchange="toggleRegistration()">
+            <span class="reg-switch-track"><span class="reg-switch-thumb"></span></span>
+            <span class="reg-switch-text" id="regToggleLabel">Loading…</span>
+          </label>
+          <button class="btn btn-ghost btn-sm" onclick="toggleTheme()" id="themeBtnDash" title="Toggle light / dark mode">
+           <svg id="themeIconDash" viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"></svg>
+           <span id="themeLabelDash">Light</span>
+         </button>
+         <button class="btn btn-ghost btn-sm" onclick="runDiagnostics()">Diagnose</button>
+         <button class="btn btn-ghost btn-sm" onclick="backToPublic()">Public View</button>
+         <button class="btn btn-sm btn-red" onclick="hrLogout()">Logout</button>
+       </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('tabRecords',this)">Intern Data</button>
+      <button class="tab-btn" onclick="switchTab('tabProgram',this)">Program Details</button>
+      <button class="tab-btn" onclick="switchTab('tabProjectDetails',this)">Project Details</button>
+    </div>
+
+      <div id="tabRecords" class="tab-content">
+      <div class="kpi-strip" id="kpiStrip"></div>
+      <div class="stats-grid" id="statsGrid"></div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-header">
+          <div class="card-title">Live Insights <span class="muted" id="analyticsUpdated"></span></div>
+          <button class="btn btn-blue btn-sm" onclick="refreshRecords()">&#8635; Refresh</button>
+        </div>
+        <div class="card-body">
+          <div class="analytics-grid" id="analyticsGrid"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Intern Data <span id="recordCount" class="badge badge-blue" style="font-size:11px"></span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-accent btn-sm" onclick="openAddIntern()">+ Add Intern</button>
+            <button class="btn btn-blue btn-sm" onclick="refreshRecords()">Refresh</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by name, email, code, or any field..." onkeyup="filterTable()">
+            <select id="filterDomain" onchange="filterTable()"><option value="">All Domains</option></select>
+            <select id="filterStatus" onchange="filterTable()">
+              <option value="">All Statuses</option>
+              <option value="Active">Active</option>
+              <option value="Pending Verification">Pending</option>
+              <option value="Completed">Completed</option>
+              <option value="Terminated">Terminated</option>
+              <option value="Resigned">Resigned</option>
+            </select>
+          </div>
+          <div class="bulk-bar" id="bulkBar">
+            <span class="sel-info" id="selInfo">0 selected</span>
+            <div class="bulk-btns">
+              <button class="btn btn-blue btn-sm" id="bulkInternMail" onclick="sendBulk('intern')">Send Intern Mails</button>
+              <button class="btn btn-orange btn-sm" id="bulkTLMail" onclick="sendBulk('tl')">Send TL Mails</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead id="recordsHead"></thead>
+              <tbody id="recordsBody"></tbody>
+            </table>
+          </div>
+          <div class="pagination-bar">
+            <span id="paginationInfo">Showing 0 records</span>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-ghost btn-sm" id="prevPage" onclick="changePage(-1)" style="display:none">Prev</button>
+              <button class="btn btn-ghost btn-sm" id="nextPage" onclick="changePage(1)" style="display:none">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabProjectDetails" class="tab-content" style="display:none">
+      <div class="project-layout">
+        <div class="project-list">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Project Groups</div></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr>
+                  <th>Group Name</th><th>Lead Email</th><th>WhatsApp</th><th>Domain</th><th class="action-col">Action</th>
+                </tr></thead>
+                <tbody id="projectBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="project-form">
+          <div class="card">
+            <div class="card-header"><div class="card-title" id="projFormTitle">Add Project Group</div></div>
+            <div class="card-body">
+              <input type="hidden" id="projRowNum" value="0">
+              <div class="fg"><label>Group Name <span class="req">*</span></label>
+                <select id="projGroupName"><option value="">Select group from Program Details</option></select>
+              </div>
+              <div class="fg"><label>Lead Email</label><input type="email" id="projEmail"></div>
+              <div class="fg"><label>WhatsApp Link</label><input type="url" id="projWhatsapp"></div>
+              <div class="fg"><label>Domain Name <span class="req">*</span> <span style="font-weight:400;color:var(--text-tertiary)">(type & press Enter / pick)</span></label>
+                <div class="chip-multi" id="projDomainChips">
+                  <span class="chip-list" id="projDomainChipList"></span>
+                  <input type="text" id="projDomainInput" class="chip-input" placeholder="Add domain…" autocomplete="off" list="projDomainOptions" onkeydown="if(event.key==='Enter'){event.preventDefault();projAddDomain(this.value);}" onchange="projAddDomain(this.value)">
+                  <datalist id="projDomainOptions"></datalist>
+                </div>
+                <input type="hidden" id="projDomain" value="">
+              </div>
+              <div style="display:flex;gap:10px;margin-top:12px">
+                <button class="btn btn-blue" onclick="saveProjectEntry()">Save</button>
+                <button class="btn btn-ghost" onclick="resetProjectForm()">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabProgram" class="tab-content" style="display:none">
+      <div class="project-layout">
+        <div class="project-list">
+          <div class="card">
+             <div class="card-header"><div class="card-title">Program Details — Domain Name</div></div>
+             <div class="table-wrap">
+               <table>
+                 <thead><tr>
+                   <th>Domain Name</th><th class="action-col">Action</th>
+                 </tr></thead>
+                 <tbody id="programDomainBody"></tbody>
+               </table>
+             </div>
+           </div>
+         </div>
+          <div class="project-form">
+            <div class="card">
+              <div class="card-header"><div class="card-title" id="progDomainFormTitle">Add Domain Name</div></div>
+              <div class="card-body">
+                <input type="hidden" id="progDomainRowNum" value="0">
+                <div class="fg"><label>Domain Name <span class="req">*</span></label><input type="text" id="progDomainText" placeholder="e.g. Web Development"></div>
+                <div style="display:flex;gap:10px;margin-top:12px">
+                  <button class="btn btn-blue" onclick="saveProgramDomain()">Save</button>
+                  <button class="btn btn-ghost" onclick="resetProgramDomainForm()">Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-form">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Program Details — Project Group Name</div></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr>
+                    <th>Domain Name</th><th>Project Group Name</th><th class="action-col">Action</th>
+                  </tr></thead>
+                  <tbody id="programGroupBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="project-form">
+            <div class="card">
+              <div class="card-header"><div class="card-title" id="progGroupFormTitle">Add Project Group Name</div></div>
+              <div class="card-body">
+                <input type="hidden" id="progGroupRowNum" value="0">
+                <div class="fg"><label>Project Group Name <span class="req">*</span></label><input type="text" id="progGroupName" placeholder="e.g. Team Alpha"></div>
+                <div style="display:flex;gap:10px;margin-top:12px">
+                  <button class="btn btn-blue" onclick="saveProgramEntry()">Save</button>
+                  <button class="btn btn-ghost" onclick="resetProgramForm()">Reset</button>
+                </div>
+             </div>
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="editModal" class="modal-overlay">
+  <div class="modal" style="max-width:700px">
+    <h3>Edit Intern Record</h3>
+    <p>Modify any intern detail below.</p>
+    <input type="hidden" id="editRowNum">
+    <div class="edit-grid" id="editGrid"></div>
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn btn-ghost" onclick="closeModal('editModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal-overlay">
+  <div class="modal confirm" style="max-width:420px">
+    <div class="confirm-icon info" id="confirmIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
+    <h3 id="confirmTitle">Confirm</h3>
+    <p id="confirmMsg">Are you sure?</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn btn-blue" id="confirmBtn" onclick="confirmAction()">Yes</button>
+    </div>
+  </div>
+</div>
+
+<div id="addInternModal" class="modal-overlay">
+  <div class="modal" style="max-width:680px">
+    <h3>Add Intern Record</h3>
+    <p>Quickly add a new intern. HR can refine all details later via Edit.</p>
+    <input type="hidden" id="addInternRowNum" value="0">
+    <div class="edit-grid" id="addInternGrid"></div>
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn btn-ghost" onclick="closeModal('addInternModal')">Cancel</button>
+      <button class="btn btn-accent" onclick="saveAddIntern()">Create Intern</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var currentRecords = [], currentConfig = [], selectedFile = null, refreshTimer = null;
+  var allDomains = [], currentProgram = [], currentProject = [];
+  var filteredRecords = [], currentPage = 1, pageSize = 15;
+  var pendingConfirm = null, currentHeaders = [], currentHeaderKeys = [];
+  var currentProgram = [], currentProject = [];
+  var tlGroup = '', tlInterns = [], tlStatusRow = 0;
+  var lastFormData = null, lastResultData = null, editingRowNum = null;
+  var colFilters = {}, selectedRowsObj = {}, projectNames = [];
+  var groupCache = {};
+
+  var COUNTRIES = [
+    "Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan",
+    "Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia",
+    "Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi",
+    "Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad","Chile","China","Colombia",
+    "Comoros","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic",
+    "Denmark","Djibouti","Dominica","Dominican Republic",
+    "Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
+    "Fiji","Finland","France",
+    "Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana",
+    "Haiti","Honduras","Hungary",
+    "Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy",
+    "Jamaica","Japan","Jordan",
+    "Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan",
+    "Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg",
+    "Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico",
+    "Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar",
+    "Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway",
+    "Oman",
+    "Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal",
+    "Qatar",
+    "Romania","Russia","Rwanda",
+    "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino",
+    "Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore",
+    "Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain",
+    "Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria",
+    "Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu",
+    "Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan",
+    "Vanuatu","Vatican City","Venezuela","Vietnam",
+    "Yemen",
+    "Zambia","Zimbabwe"
+  ];
+
+  document.addEventListener('DOMContentLoaded', function() {
+    initTheme();
+    setDate();
+    loadDomains();
+    initUpload();
+    populateCountries();
+    initRegistrationToggle();
+    var progEls = document.querySelectorAll('#regFormCard input, #regFormCard select');
+    for (var pe = 0; pe < progEls.length; pe++) {
+      progEls[pe].addEventListener('input', updateProgress);
+      progEls[pe].addEventListener('change', updateProgress);
+    }
+    updateProgress();
+    var rc = document.getElementById('regFormCard');
+    if (rc) rc.classList.add('card-enter');
+  });
+
+  function populateCountries() {
+    var ids = ['currCountry','permCountry'];
+    for (var c = 0; c < ids.length; c++) {
+      var sel = document.getElementById(ids[c]);
+      if (!sel) continue;
+      for (var i = 0; i < COUNTRIES.length; i++) {
+        var o = document.createElement('option');
+        o.value = COUNTRIES[i];
+        o.textContent = COUNTRIES[i];
+        if (COUNTRIES[i] === 'India') o.selected = true;
+        sel.appendChild(o);
+      }
+    }
+  }
+
+  function setDate() {
+    var el = document.getElementById('regDate');
+    if (!el) return;
+    var d = new Date(), y = d.getFullYear(), m = ('0'+(d.getMonth()+1)).slice(-2), day = ('0'+d.getDate()).slice(-2);
+    el.value = day+'-'+m+'-'+y;
+  }
+
+  var SUN_SVG = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"/>';
+  var MOON_SVG = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+
+  function initTheme() {
+    var stored = 'dark';
+    try { stored = localStorage.getItem('hr_portal_theme') || 'dark'; } catch (e) {}
+    applyTheme(stored);
+  }
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    var iconHtml = theme === 'dark' ? SUN_SVG : MOON_SVG;
+    var label = theme === 'dark' ? 'Light' : 'Dark';
+    var i1 = document.getElementById('themeIcon'); if (i1) i1.innerHTML = iconHtml;
+    var i2 = document.getElementById('themeIconDash'); if (i2) i2.innerHTML = iconHtml;
+    var l1 = document.getElementById('themeLabel'); if (l1) l1.textContent = label;
+    var l2 = document.getElementById('themeLabelDash'); if (l2) l2.textContent = label;
+  }
+  function toggleTheme() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    var next = cur === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('hr_portal_theme', next); } catch (e) {}
+  }
+
+  function showSpinner(t) { document.getElementById('spinnerText').textContent = t || 'Loading...'; document.getElementById('spinnerOverlay').classList.add('active'); }
+  function hideSpinner() { document.getElementById('spinnerOverlay').classList.remove('active'); }
+
+  function toast(msg, type) {
+    type = type || 'accent';
+    var c = document.getElementById('toastContainer');
+    var t = document.createElement('div');
+    t.className = 'toast toast-' + type;
+    var iconSvg = '';
+    if (type === 'green') iconSvg = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+    else if (type === 'red') iconSvg = '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    else if (type === 'orange') iconSvg = '<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+    else iconSvg = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+    t.innerHTML = '<span class="toast-icon">'+iconSvg+'</span> ' + msg;
+    c.appendChild(t);
+    setTimeout(function() {
+      t.style.opacity = '0'; t.style.transform = 'translateX(40px)'; t.style.transition = 'all 0.3s';
+      setTimeout(function() { if (t.parentNode) t.remove(); }, 300);
+    }, 3500);
+  }
+
+  function toggleStep(header) {
+    var body = header.nextElementSibling;
+    var arrow = header.querySelector('.step-arrow');
+    if (!body) return;
+    body.classList.toggle('open');
+    if (arrow) arrow.classList.toggle('open');
+  }
+
+  function updateProgress() {
+    var ids = ['regName','regEmail','regMobile','regWhatsapp','currAddr1','currPo','currDistrict','currState','currCountry','currPin','regCollege','regDegree','regBranch','regEnroll','regDomain'];
+    var filled = 0, total = ids.length;
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i]);
+      if (el && el.value && el.value.trim()) filled++;
+    }
+    if (selectedFile) filled++;
+    total++;
+    var pct = Math.round((filled / total) * 100);
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = pct + '%';
+  }
+
+  function clearErrors() {
+    var els = document.querySelectorAll('.field-error');
+    for (var i = 0; i < els.length; i++) els[i].classList.remove('show');
+    var errs = document.querySelectorAll('input.error, select.error');
+    for (var i = 0; i < errs.length; i++) errs[i].classList.remove('error');
+  }
+
+  function showErr(id) { var e = document.getElementById(id); if (e) e.classList.add('show'); }
+
+  function initUpload() {
+    var zone = document.getElementById('uploadZone');
+    var input = document.getElementById('pdfInput');
+    if (!zone || !input) return;
+    zone.onclick = function() { input.click(); };
+    input.onchange = function(e) { if (e.target.files[0]) processFile(e.target.files[0]); };
+    zone.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('dragover'); });
+    zone.addEventListener('dragleave', function(e) { e.preventDefault(); this.classList.remove('dragover'); });
+    zone.addEventListener('drop', function(e) { e.preventDefault(); this.classList.remove('dragover'); if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); });
+  }
+
+  function processFile(f) {
+    if (f.type !== 'application/pdf') { toast('Please select a PDF file', 'red'); return; }
+    if (f.size > 5*1024*1024) { toast('File too large. Max 5MB.', 'red'); return; }
+    selectedFile = f;
+    document.getElementById('fileName').textContent = f.name + ' (' + (f.size/1024).toFixed(1) + ' KB)';
+    document.getElementById('uploadZone').classList.add('has-file');
+    document.getElementById('errFile').classList.remove('show');
+    updateProgress();
+  }
+
+  function loadDomains() {
+    google.script.run
+      .withSuccessHandler(function(d) {
+        var sel = document.getElementById('regDomain');
+        var filterSel = document.getElementById('filterDomain');
+        if (!sel) return;
+        var cur = sel.value;
+        if (!d || d.length === 0) { sel.innerHTML = '<option value="">No domains</option>'; return; }
+        sel.innerHTML = '<option value="">-- Select Domain --</option>';
+        if (filterSel) filterSel.innerHTML = '<option value="">All Domains</option>';
+        for (var i = 0; i < d.length; i++) {
+          var o1 = document.createElement('option'); o1.value = d[i]; o1.textContent = d[i]; sel.appendChild(o1);
+          if (filterSel) { var o2 = document.createElement('option'); o2.value = d[i]; o2.textContent = d[i]; filterSel.appendChild(o2); }
+        }
+        if (cur) sel.value = cur;
+      })
+      .withFailureHandler(function() {})
+      .getActiveDomains();
+  }
+
+  function populateDomainSelects(domains) {
+    var sel = document.getElementById('regDomain');
+    var filterSel = document.getElementById('filterDomain');
+    if (sel) {
+      var cur = sel.value;
+      sel.innerHTML = '<option value="">-- Select Domain --</option>';
+      for (var i = 0; i < domains.length; i++) {
+        var o = document.createElement('option'); o.value = domains[i]; o.textContent = domains[i]; sel.appendChild(o);
+      }
+      if (cur) sel.value = cur;
+    }
+    if (filterSel) {
+      filterSel.innerHTML = '<option value="">All Domains</option>';
+      for (var j = 0; j < domains.length; j++) {
+        var o2 = document.createElement('option'); o2.value = domains[j]; o2.textContent = domains[j]; filterSel.appendChild(o2);
+      }
+    }
+  }
+
+  function fillProgDomain(domains) {
+    var ids = ['progDomainOnly', 'progDomainForGroup'];
+    for (var k = 0; k < ids.length; k++) {
+      var sel = document.getElementById(ids[k]);
+      if (!sel) continue;
+      var cur = sel.value;
+      sel.innerHTML = '<option value="">-- Select Domain --</option>';
+      for (var i = 0; i < domains.length; i++) {
+        var o = document.createElement('option'); o.value = domains[i]; o.textContent = domains[i]; sel.appendChild(o);
+      }
+      if (cur) sel.value = cur;
+    }
+  }
+
+  function toggleSameMobile() {
+    var chk = document.getElementById('sameMobile');
+    var wrap = document.getElementById('sameMobileWrap');
+    var wa = document.getElementById('regWhatsapp');
+    var mob = document.getElementById('regMobile');
+    if (chk.checked) {
+      wa.value = mob.value;
+      wa.readOnly = true;
+      document.getElementById('errWhatsapp').classList.remove('show');
+      wa.classList.remove('error');
+      if (wrap) wrap.classList.add('checked');
+    } else {
+      wa.readOnly = false;
+      if (wrap) wrap.classList.remove('checked');
+    }
+  }
+
+  function toggleSameAddress() {
+    var chk = document.getElementById('sameAddress');
+    var wrap = document.getElementById('sameAddressWrap');
+    var fields = document.getElementById('permAddrFields');
+    if (chk.checked) {
+      fields.style.display = 'none';
+      if (wrap) wrap.classList.add('checked');
+    } else {
+      fields.style.display = 'block';
+      if (wrap) wrap.classList.remove('checked');
+    }
+  }
+
+  function checkEmail() {
+    var email = document.getElementById('regEmail');
+    if (!email || !email.value.trim()) { showErr('errEmail'); if (email) email.classList.add('error'); document.getElementById('errEmail').textContent = 'Please enter your email'; return false; }
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value.trim())) { showErr('errEmail'); if (email) email.classList.add('error'); document.getElementById('errEmail').textContent = 'Please enter a valid email address'; return false; }
+    return true;
+  }
+  function checkMobile() {
+    var mobile = document.getElementById('regMobile');
+    if (!mobile || !mobile.value.trim()) { showErr('errMobile'); if (mobile) mobile.classList.add('error'); document.getElementById('errMobile').textContent = 'Please enter mobile number'; return false; }
+    var mobileClean = mobile.value.trim().replace(/[\s\-\(\)]/g, '');
+    if (!/^(\+?\d{1,3})?\d{10}$/.test(mobileClean)) { showErr('errMobile'); if (mobile) mobile.classList.add('error'); document.getElementById('errMobile').textContent = 'Enter a valid 10-digit mobile number'; return false; }
+    return true;
+  }
+  function checkWhatsapp() {
+    var whatsapp = document.getElementById('regWhatsapp');
+    var sameMobileChk = document.getElementById('sameMobile');
+    if (whatsapp && whatsapp.value.trim()) {
+      var waClean = whatsapp.value.trim().replace(/[\s\-\(\)]/g, '');
+      if (!/^(\+?\d{1,3})?\d{10}$/.test(waClean) && (!sameMobileChk || !sameMobileChk.checked)) {
+        showErr('errWhatsapp'); if (whatsapp) whatsapp.classList.add('error');
+        document.getElementById('errWhatsapp').textContent = 'Enter a valid WhatsApp number';
+        return false;
+      }
+      return true;
+    }
+    if (!sameMobileChk || !sameMobileChk.checked) {
+      showErr('errWhatsapp'); if (whatsapp) whatsapp.classList.add('error');
+      document.getElementById('errWhatsapp').textContent = 'Please enter WhatsApp number or check same as mobile';
+      return false;
+    }
+    return true;
+  }
+  function checkRequired(ids) {
+    var ok = true;
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i].id);
+      if (!el || !el.value.trim()) { showErr(ids[i].err); if (el) el.classList.add('error'); ok = false; }
+    }
+    return ok;
+  }
+  function scrollToFirstError() {
+    var firstErr = document.querySelector('#regFormCard .error');
+    if (firstErr) {
+      firstErr.scrollIntoView({ behavior:'smooth', block:'center' });
+      firstErr.classList.remove('field-shake');
+      void firstErr.offsetWidth;
+      firstErr.classList.add('field-shake');
+    }
+  }
+  var CURR_REQUIRED = [
+    {id:'regName',err:'errName'},{id:'currAddr1',err:'errCurrAddr1'},{id:'currPo',err:'errCurrPo'},
+    {id:'currDistrict',err:'errCurrDistrict'},{id:'currState',err:'errCurrState'},
+    {id:'currCountry',err:'errCurrCountry'},{id:'currPin',err:'errCurrPin'}
+  ];
+  var PERM_REQUIRED = [
+    {id:'permAddr1',err:'errPermAddr1'},{id:'permPo',err:'errPermPo'},
+    {id:'permDistrict',err:'errPermDistrict'},{id:'permState',err:'errPermState'},
+    {id:'permCountry',err:'errPermCountry'},{id:'permPin',err:'errPermPin'}
+  ];
+  var ACADEMIC_REQUIRED = [
+    {id:'regCollege',err:'errCollege'},{id:'regDegree',err:'errDegree'},
+    {id:'regBranch',err:'errBranch'},{id:'regEnroll',err:'errEnroll'}
+  ];
+
+  function validate() {
+    clearErrors();
+    var ok = true;
+    if (!checkEmail()) ok = false;
+    if (!checkMobile()) ok = false;
+    if (!checkWhatsapp()) ok = false;
+    if (!checkRequired(CURR_REQUIRED)) ok = false;
+    var sameAddrChk = document.getElementById('sameAddress');
+    if (!sameAddrChk || !sameAddrChk.checked) { if (!checkRequired(PERM_REQUIRED)) ok = false; }
+    if (!checkRequired(ACADEMIC_REQUIRED)) ok = false;
+    var domain = document.getElementById('regDomain');
+    if (!domain || !domain.value) { showErr('errDomain'); if (domain) domain.classList.add('error'); ok = false; }
+    if (!selectedFile) { showErr('errFile'); ok = false; }
+    if (!ok) { scrollToFirstError(); toast('Please fill all required fields', 'red'); }
+    return ok;
+  }
+
+  function validateStep(idx) {
+    var ok = true;
+    if (idx === 0) {
+      if (!checkEmail()) ok = false;
+      if (!checkMobile()) ok = false;
+      if (!checkWhatsapp()) ok = false;
+      if (!checkRequired(CURR_REQUIRED)) ok = false;
+      var sa = document.getElementById('sameAddress');
+      if (!sa || !sa.checked) { if (!checkRequired(PERM_REQUIRED)) ok = false; }
+    } else if (idx === 1) {
+      if (!checkRequired(ACADEMIC_REQUIRED)) ok = false;
+    } else if (idx === 2) {
+      var domain = document.getElementById('regDomain');
+      if (!domain || !domain.value) { showErr('errDomain'); if (domain) domain.classList.add('error'); ok = false; }
+      if (!selectedFile) { showErr('errFile'); ok = false; }
+    }
+    if (!ok) { scrollToFirstError(); toast('Please complete this step', 'red'); }
+    return ok;
+  }
+
+  function goToStep(idx) {
+    var groups = document.querySelectorAll('#regFormCard .step-group');
+    for (var i = 0; i < groups.length; i++) {
+      var body = groups[i].querySelector('.step-body');
+      var arrow = groups[i].querySelector('.step-arrow');
+      if (body && arrow) {
+        if (i === idx) { body.classList.add('open'); arrow.classList.add('open'); }
+        else { body.classList.remove('open'); arrow.classList.remove('open'); }
+      }
+    }
+    var card = document.getElementById('regFormCard');
+    window.scrollTo({ top: (card ? card.offsetTop - 80 : 0), behavior: 'smooth' });
+  }
+  function nextStep(cur) { if (validateStep(cur)) goToStep(cur + 1); }
+  function prevStep(cur) { goToStep(cur - 1); }
+
+  function submitRegistration() {
+    if (!validate()) return;
+    var sb = document.getElementById('regSubmitBtn');
+    if (sb) sb.disabled = true;
+    showSpinner('Uploading and processing...');
+    var fd = getFormData();
+    var isEditing = editingRowNum !== null;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var base64 = e.target.result.split(',')[1];
+      if (isEditing) {
+        google.script.run
+          .withSuccessHandler(function(result) {
+            hideSpinner();
+            if (sb) sb.disabled = false;
+            if (result && result.success) {
+              lastFormData = fd;
+              lastResultData = result;
+              showResult(result, fd);
+            } else {
+              toast(result && result.error ? result.error : 'Update failed', 'red');
+            }
+          })
+          .withFailureHandler(function(err) { hideSpinner(); if (sb) sb.disabled = false; toast('Error: ' + err, 'red'); })
+          .updateInternRow(editingRowNum, fd, {base64:base64, name:selectedFile.name, type:selectedFile.type});
+      } else {
+        lastFormData = null;
+        lastResultData = null;
+        google.script.run
+          .withSuccessHandler(function(result) {
+            hideSpinner();
+            if (sb) sb.disabled = false;
+            if (result && result.success) {
+              lastFormData = fd;
+              lastResultData = result;
+              showResult(result, fd);
+            } else {
+              toast(result && result.error ? result.error : 'Registration failed', 'red');
+            }
+          })
+          .withFailureHandler(function(err) { hideSpinner(); if (sb) sb.disabled = false; toast('Error: ' + err, 'red'); })
+          .handleInternRegistration(fd, {base64:base64, name:selectedFile.name, type:selectedFile.type});
+      }
+    };
+    reader.readAsDataURL(selectedFile);
+  }
+
+  function getFormData() {
+    return {
+      name: document.getElementById('regName').value.trim(),
+      emailId: document.getElementById('regEmail').value.trim(),
+      mobileNo: document.getElementById('regMobile').value.trim(),
+      whatsappNo: document.getElementById('regWhatsapp').value.trim(),
+      currAddr1: document.getElementById('currAddr1').value.trim(),
+      currAddr2: document.getElementById('currAddr2').value.trim(),
+      currPo: document.getElementById('currPo').value.trim(),
+      currDistrict: document.getElementById('currDistrict').value.trim(),
+      currState: document.getElementById('currState').value.trim(),
+      currCountry: document.getElementById('currCountry').value,
+      currPin: document.getElementById('currPin').value.trim(),
+      sameAsCurrent: document.getElementById('sameAddress').checked,
+      permAddr1: document.getElementById('permAddr1').value.trim(),
+      permAddr2: document.getElementById('permAddr2').value.trim(),
+      permPo: document.getElementById('permPo').value.trim(),
+      permDistrict: document.getElementById('permDistrict').value.trim(),
+      permState: document.getElementById('permState').value.trim(),
+      permCountry: document.getElementById('permCountry').value,
+      permPin: document.getElementById('permPin').value.trim(),
+      collegeName: document.getElementById('regCollege').value.trim(),
+      degreeName: document.getElementById('regDegree').value.trim(),
+      branchName: document.getElementById('regBranch').value.trim(),
+      enrollmentNo: document.getElementById('regEnroll').value.trim(),
+      domainName: document.getElementById('regDomain').value,
+      onboardingDate: document.getElementById('regDate').value
+    };
+  }
+
+  function showResult(result, d) {
+    document.getElementById('regFormCard').style.display = 'none';
+    document.getElementById('resultScreen').classList.add('show');
+    var isSuccess = result.status === 'Passed';
+    var iconWrap = document.getElementById('resultIconWrap');
+    iconWrap.className = 'result-icon-wrap ' + (isSuccess ? 'success' : 'fail');
+    var svg = document.getElementById('resultIconSvg');
+    var circles = svg.querySelectorAll('.check-circle, .x-circle');
+    var paths = svg.querySelectorAll('.check-path, .x-path, .x-path-2');
+    for (var si = 0; si < circles.length; si++) circles[si].style.display = 'none';
+    for (var si = 0; si < paths.length; si++) paths[si].style.display = 'none';
+    if (isSuccess) {
+      svg.querySelector('.check-circle').removeAttribute('display');
+      svg.querySelector('.check-path').removeAttribute('display');
+    } else {
+      svg.querySelector('.x-circle').removeAttribute('display');
+      svg.querySelector('.x-path').removeAttribute('display');
+      svg.querySelector('.x-path-2').removeAttribute('display');
+    }
+    void svg.offsetWidth;
+    var animEls = svg.querySelectorAll('.check-circle, .check-path, .x-circle, .x-path, .x-path-2');
+    for (var ai = 0; ai < animEls.length; ai++) {
+      animEls[ai].style.animation = 'none';
+      void animEls[ai].offsetHeight;
+      if (animEls[ai].getAttribute('display') !== 'none') {
+        animEls[ai].style.animation = '';
+      }
+    }
+    document.getElementById('resultTitle').textContent = isSuccess ? 'Registration Successful' : 'Registration Needs Review';
+    document.getElementById('resultSubtitle').textContent = isSuccess
+      ? 'Your application has been verified and processed successfully.'
+      : 'Your registration was saved but requires manual verification.';
+    var codeEl = document.getElementById('displayCode');
+    if (isSuccess && result.code) {
+      codeEl.style.display = 'block';
+      codeEl.textContent = result.code;
+    } else {
+      codeEl.style.display = 'none';
+    }
+    var failEl = document.getElementById('resultFailReason');
+    var failText = document.getElementById('resultFailText');
+    if (!isSuccess && result.reason) {
+      failEl.style.display = 'block';
+      failText.textContent = result.reason;
+    } else {
+      failEl.style.display = 'none';
+    }
+    var editBtn = document.getElementById('resultEditBtn');
+    var anotherBtn = document.getElementById('resultAnotherBtn');
+    if (!isSuccess) {
+      editBtn.style.display = 'inline-flex';
+      editBtn.textContent = 'Edit & Fix';
+      editBtn.style.background = 'var(--orange)';
+      anotherBtn.style.display = 'none';
+      lastFormData = d;
+      lastResultData = result;
+      editingRowNum = result.rowNumber;
+    } else {
+      editBtn.style.display = 'none';
+      anotherBtn.style.display = 'inline-flex';
+      lastFormData = null;
+      lastResultData = result;
+      editingRowNum = null;
+    }
+    document.getElementById('dName').textContent = d.name || '-';
+    document.getElementById('dEmail').textContent = d.emailId || '-';
+    document.getElementById('dMobile').textContent = d.mobileNo || '-';
+    document.getElementById('dDomain').textContent = d.domainName || '-';
+    document.getElementById('dCollege').textContent = d.collegeName || '-';
+    document.getElementById('dBranch').textContent = d.branchName || '-';
+    document.getElementById('dDate').textContent = fmtDate(document.getElementById('regDate').value) || '-';
+    var st = document.getElementById('dStatus');
+    st.textContent = result.status || (isSuccess ? 'Passed' : 'Failed');
+    st.style.color = isSuccess ? 'var(--green)' : 'var(--orange)';
+    st.style.fontWeight = '600';
+    if (isSuccess) {
+      toast('Registration successful! Code: ' + result.code, 'green');
+    } else {
+      toast('Registration saved with pending verification', 'orange');
+    }
+  }
+
+  function editSubmitted() {
+    if (!lastFormData) { resetAll(); return; }
+    if (lastResultData && lastResultData.rowNumber) {
+      editingRowNum = lastResultData.rowNumber;
+    }
+    var d = lastFormData;
+    document.getElementById('resultScreen').classList.remove('show');
+    document.getElementById('regFormCard').style.display = 'block';
+    document.getElementById('regName').value = d.name || '';
+    document.getElementById('regEmail').value = d.emailId || '';
+    document.getElementById('regMobile').value = d.mobileNo || '';
+    document.getElementById('regWhatsapp').value = d.whatsappNo || '';
+    if (d.whatsappNo && d.mobileNo && d.whatsappNo === d.mobileNo) {
+      document.getElementById('sameMobile').checked = true;
+      document.getElementById('regWhatsapp').readOnly = true;
+      document.getElementById('sameMobileWrap').classList.add('checked');
+    } else {
+      document.getElementById('sameMobile').checked = false;
+      document.getElementById('regWhatsapp').readOnly = false;
+      document.getElementById('sameMobileWrap').classList.remove('checked');
+    }
+    document.getElementById('currAddr1').value = d.currAddr1 || '';
+    document.getElementById('currAddr2').value = d.currAddr2 || '';
+    document.getElementById('currPo').value = d.currPo || '';
+    document.getElementById('currDistrict').value = d.currDistrict || '';
+    document.getElementById('currState').value = d.currState || '';
+    if (d.currCountry) document.getElementById('currCountry').value = d.currCountry;
+    document.getElementById('currPin').value = d.currPin || '';
+    var sameAddr = d.sameAsCurrent === true || d.sameAsCurrent === 'true';
+    document.getElementById('sameAddress').checked = sameAddr;
+    if (sameAddr) {
+      document.getElementById('permAddrFields').style.display = 'none';
+      document.getElementById('sameAddressWrap').classList.add('checked');
+    } else {
+      document.getElementById('permAddrFields').style.display = 'block';
+      document.getElementById('sameAddressWrap').classList.remove('checked');
+      document.getElementById('permAddr1').value = d.permAddr1 || '';
+      document.getElementById('permAddr2').value = d.permAddr2 || '';
+      document.getElementById('permPo').value = d.permPo || '';
+      document.getElementById('permDistrict').value = d.permDistrict || '';
+      document.getElementById('permState').value = d.permState || '';
+      if (d.permCountry) document.getElementById('permCountry').value = d.permCountry;
+      document.getElementById('permPin').value = d.permPin || '';
+    }
+    document.getElementById('regCollege').value = d.collegeName || '';
+    document.getElementById('regDegree').value = d.degreeName || '';
+    document.getElementById('regBranch').value = d.branchName || '';
+    document.getElementById('regEnroll').value = d.enrollmentNo || '';
+    if (d.domainName) document.getElementById('regDomain').value = d.domainName;
+    selectedFile = null;
+    document.getElementById('fileName').textContent = '';
+    document.getElementById('uploadZone').classList.remove('has-file');
+    document.getElementById('pdfInput').value = '';
+    clearErrors();
+    updateProgress();
+    goToStep(0);
+    window.scrollTo({top:0,behavior:'smooth'});
+    toast('Form pre-filled. Re-upload PDF and re-submit.', 'accent');
+  }
+
+  function resetAll() {
+    document.getElementById('resultScreen').classList.remove('show');
+    document.getElementById('regFormCard').style.display = 'block';
+    var inputs = document.querySelectorAll('#publicView input');
+    for (var i = 0; i < inputs.length; i++) { if (inputs[i].type !== 'date') inputs[i].value = ''; }
+    document.getElementById('regDomain').value = '';
+    document.getElementById('sameMobile').checked = false;
+    document.getElementById('regWhatsapp').readOnly = false;
+    document.getElementById('sameMobileWrap').classList.remove('checked');
+    document.getElementById('sameAddress').checked = false;
+    document.getElementById('permAddrFields').style.display = 'block';
+    document.getElementById('sameAddressWrap').classList.remove('checked');
+    selectedFile = null;
+    lastFormData = null;
+    lastResultData = null;
+    editingRowNum = null;
+    document.getElementById('fileName').textContent = '';
+    document.getElementById('uploadZone').classList.remove('has-file');
+    document.getElementById('pdfInput').value = '';
+    setDate();
+    clearErrors();
+    updateProgress();
+    goToStep(0);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function showLogin() {
+    document.getElementById('loginError').textContent = '';
+    document.getElementById('hrUserId').value = '';
+    document.getElementById('hrPassword').value = '';
+    document.getElementById('loginModal').classList.add('open');
+  }
+
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function hrLogin() {
+    var uid = document.getElementById('hrUserId').value.trim();
+    var pw = document.getElementById('hrPassword').value;
+    if (!uid) { document.getElementById('loginError').textContent = 'Please enter User ID'; return; }
+    if (!pw) { document.getElementById('loginError').textContent = 'Please enter password'; return; }
+    showSpinner('Verifying...');
+    google.script.run
+      .withSuccessHandler(function(r) {
+        hideSpinner();
+        if (r === true || (r && r.success === true)) {
+          closeModal('loginModal');
+          document.getElementById('publicView').style.display = 'none';
+          document.getElementById('dashboardScreen').style.display = 'block';
+          showSpinner('Loading dashboard...');
+          google.script.run
+            .withSuccessHandler(function(d) {
+              hideSpinner();
+              if (d && d.success) {
+                currentRecords = d.records || [];
+                currentHeaders = d.headers || [];
+                currentHeaderKeys = d.headerKeys || [];
+                currentProgram = d.program || [];
+                currentProject = d.project || [];
+                document.getElementById('diagCount').textContent = (d.count || 0) + ' records';
+                allDomains = d.domains || [];
+                populateDomainSelects(allDomains);
+                fillProgDomain(allDomains);
+                renderProgramDetails();
+                renderProjectDetails();
+                updateRegToggleLabel(d.regEnabled !== false);
+                buildStats();
+                renderTableHead();
+                filterTable();
+                toast('Welcome to HR Dashboard', 'green');
+              } else {
+                toast('Error: ' + ((d && d.error) || 'Failed'), 'red');
+              }
+            })
+            .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+            .getDashboardInit();
+        } else {
+          document.getElementById('loginError').textContent = 'Invalid credentials';
+        }
+      })
+      .withFailureHandler(function(e) { hideSpinner(); document.getElementById('loginError').textContent = 'Error: '+e; })
+      .verifyHRLogin(uid, pw);
+  }
+
+  function hrLogout() {
+    document.getElementById('dashboardScreen').style.display = 'none';
+    document.getElementById('publicView').style.display = 'block';
+    toast('Logged out', 'orange');
+  }
+
+  function backToPublic() {
+    document.getElementById('dashboardScreen').style.display = 'none';
+    document.getElementById('publicView').style.display = 'block';
+  }
+
+  function switchTab(id, btn) {
+    var tabs = document.querySelectorAll('#dashboardScreen .tab-content');
+    for (var i = 0; i < tabs.length; i++) tabs[i].style.display = 'none';
+    var btns = document.querySelectorAll('#dashboardScreen .tab-btn');
+    for (var i = 0; i < btns.length; i++) { btns[i].style.background = 'transparent'; btns[i].style.color = 'var(--text-secondary)'; }
+    document.getElementById(id).style.display = 'block';
+    if (btn) { btn.style.background = 'var(--accent)'; btn.style.color = '#0f172a'; }
+    if (id === 'tabRecords') { if (!currentRecords || currentRecords.length === 0) refreshRecords(); else { renderTableHead(); filterTable(); } }
+    if (id === 'tabProgram') { if (!currentProgram || currentProgram.length === 0) loadProgramDetails(); else renderProgramDetails(); }
+    if (id === 'tabProjectDetails') { if (!currentProject || currentProject.length === 0) loadProjectDetails(); else { renderProjectDetails(); populateProjectDropdowns(); } }
+  }
+
+  function runDiagnostics() {
+    showSpinner('Running diagnostics...');
+    google.script.run
+      .withSuccessHandler(function(d) {
+        hideSpinner();
+        if (d && d.success) {
+          var msg = 'Sheet "' + d.MASTER_SHEET + '" found: ' + d.masterFound +
+            ' | Data rows: ' + d.masterRows +
+            ' | Project sheet: ' + d.projFound +
+            ' | All sheets: ' + (d.allSheets || []).join(', ');
+          toast(msg, 'accent');
+          console.log('DIAGNOSTIC:', JSON.stringify(d, null, 2));
+        } else {
+          toast('Diagnostic failed: ' + (d ? d.error : 'No response'), 'red');
+        }
+      })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Diagnostic error: ' + e, 'red'); })
+      .testDataConnection();
+  }
+
+  function refreshRecords() {
+    showSpinner('Loading records...');
+    document.getElementById('recordsBody').innerHTML = '<tr><td colspan="99" style="text-align:center;padding:40px;color:var(--text-tertiary)">Loading...</td></tr>';
+    google.script.run
+      .withSuccessHandler(function(r) {
+        hideSpinner();
+        if (r && r.success === false) {
+          toast('Server error: ' + (r.error || 'Unknown'), 'red');
+          currentRecords = [];
+        } else if (r && r.data) {
+          currentRecords = r.data;
+          currentHeaders = r.headers || [];
+          currentHeaderKeys = r.headerKeys || [];
+          document.getElementById('diagCount').textContent = r.count + ' records';
+        } else if (r && Array.isArray(r)) {
+          currentRecords = r;
+          currentHeaders = [];
+          currentHeaderKeys = [];
+          document.getElementById('diagCount').textContent = r.length + ' records';
+        } else {
+          currentRecords = [];
+          document.getElementById('diagCount').textContent = '0 records';
+        }
+        buildStats();
+        renderTableHead();
+        filterTable();
+      })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); currentRecords = []; filterTable(); })
+      .fetchInternRecords();
+  }
+
+   var _headSig = '';
+   function renderTableHead() {
+    var thead = document.getElementById('recordsHead');
+    if (!thead) return;
+    var sig = (currentHeaders || []).join('|');
+    if (sig === _headSig && thead.innerHTML) return;
+    _headSig = sig;
+    var h = '<tr><th style="width:30px"><input type="checkbox" class="check-all" onchange="toggleAllCheck(this)"></th>';
+    for (var i = 0; i < currentHeaders.length; i++) {
+      h += '<th><div class="col-header"><span>' + esc(currentHeaders[i]) + '</span><span class="col-filter-icon" onclick="event.stopPropagation();toggleColFilter('+i+',event)">▾</span></div></th>';
+    }
+    h += '<th class="action-col" style="min-width:120px">Actions</th></tr>';
+    thead.innerHTML = h;
+  }
+
+  var ICONS = {
+    users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    active:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+    pending:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    done:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+    term:'<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+    pass:'<path d="M20 6 9 17l-5-5"/>',
+    fail:'<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+    mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+    tl:'<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/>',
+    resign:'<path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M4 4h6v4"/><path d="M4 20h6v-4"/>'
+  };
+
+  var _statsBuilt = false;
+  function buildStats() {
+    var grid = document.getElementById('statsGrid');
+    if (!grid) return;
+     var total = currentRecords.length;
+     var active = 0, pending = 0, completed = 0, terminated = 0, resigned = 0, mailed = 0, tlMailed = 0, vPass = 0, vFail = 0, validated = 0;
+     for (var i = 0; i < currentRecords.length; i++) {
+       var r = currentRecords[i];
+       var s = (r['Current Status'] || '').toString().toLowerCase();
+       if (s === 'active') active++;
+       else if (s === 'pending verification' || s === 'pending') pending++;
+       else if (s === 'completed') completed++;
+       else if (s === 'terminated') terminated++;
+       else if (s === 'resigned') resigned++;
+       if ((r['Intern Mail Sent'] || '') === 'Yes') mailed++;
+       if ((r['TL Mail Sent'] || '') === 'Yes') tlMailed++;
+       var v = (r['Validation Status'] || '').toString().toLowerCase();
+       if (v === 'passed') { vPass++; validated++; }
+       else if (v === 'failed') { vFail++; validated++; }
+     }
+     var cards = [
+       { l:'Total Interns', n:total, c:'var(--accent)', ic:'users', t:'', tg:'' },
+       { l:'Active', n:active, c:'var(--green)', ic:'active', t:pct(active,total)+'% of total', tg:'up' },
+       { l:'Pending Verification', n:pending, c:'var(--orange)', ic:'pending', t:pct(pending,total)+' awaiting', tg:'down' },
+       { l:'Completed', n:completed, c:'var(--teal)', ic:'done', t:pct(completed,total)+' done', tg:'up' },
+       { l:'Terminated', n:terminated, c:'var(--red)', ic:'term', t:pct(terminated,total)+' left', tg:'down' },
+       { l:'Resigned', n:resigned, c:'#64748b', ic:'resign', t:pct(resigned,total)+' resigned', tg:'down' },
+       { l:'Validation Passed', n:vPass, c:'var(--green)', ic:'pass', t:pct(vPass,validated)+' of checked', tg:'up' },
+       { l:'Validation Failed', n:vFail, c:'var(--red)', ic:'fail', t:pct(vFail,validated)+' need fix', tg:'down' },
+       { l:'Intern Mails', n:mailed, c:'var(--accent)', ic:'mail', t:pct(mailed,total)+' delivered', tg:'up' },
+       { l:'TL Mails', n:tlMailed, c:'var(--teal)', ic:'tl', t:pct(tlMailed,total)+' delivered', tg:'up' }
+     ];
+    grid.innerHTML = '';
+    for (var ci = 0; ci < cards.length; ci++) {
+      var cd = cards[ci];
+      var el = document.createElement('div');
+      el.className = 'stat-card' + (_statsBuilt ? '' : ' card-enter');
+      el.style.animationDelay = (ci * 45) + 'ms';
+      el.innerHTML =
+         '<div class="stat-bar" style="background:linear-gradient(90deg,'+cd.c+','+hexA(cd.c,0.2)+')"></div>' +
+         '<div class="stat-accent" style="background:'+cd.c+';box-shadow:0 0 24px '+cd.c+'"></div>' +
+        '<div class="stat-icon" style="color:'+cd.c+';background:'+hexA(cd.c,0.12)+';border-color:'+hexA(cd.c,0.3)+'"><svg viewBox="0 0 24 24">'+ICONS[cd.ic]+'</svg></div>' +
+        '<div class="stat-num" data-count="'+cd.n+'">0</div>' +
+        '<div class="stat-label">'+cd.l+'</div>' +
+        (cd.t ? '<div class="stat-trend '+cd.tg+'">'+(cd.tg==='up'?'&#9650;':'&#9660;')+' '+cd.t+'</div>' : '');
+      grid.appendChild(el);
+      attachTilt(el);
+    }
+    // animate count-up
+    var nums = grid.querySelectorAll('.stat-num');
+    for (var ni = 0; ni < nums.length; ni++) countUp(nums[ni], parseInt(nums[ni].getAttribute('data-count'), 10) || 0);
+    // KPI strip
+    var kpi = document.getElementById('kpiStrip');
+    if (kpi) {
+      var validatedPct = total ? Math.round((validated/total)*100) : 0;
+      kpi.innerHTML =
+        '<span class="kpi-chip">&#9679; <b>'+total+'</b> records</span>' +
+        '<span class="kpi-chip" style="color:var(--green)">&#9679; <b>'+active+'</b> active</span>' +
+        '<span class="kpi-chip" style="color:var(--orange)">&#9679; <b>'+pending+'</b> pending</span>' +
+        '<span class="kpi-chip" style="color:var(--purple)">&#9679; <b>'+validatedPct+'%</b> validated</span>' +
+        '<span class="kpi-chip" style="color:var(--accent)">&#9679; <b>'+mailed+'</b> mails sent</span>';
+    }
+    _statsBuilt = true;
+    buildAnalytics();
+  }
+
+  function pct(a, b) { return b ? Math.round((a/b)*100) + '%' : '0%'; }
+  function fmtDate(v) {
+    if (!v) return '';
+    var s = v.toString().trim();
+    if (!s) return '';
+    var d = null;
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) d = new Date(s + (s.length === 10 ? 'T00:00:00' : ''));
+    else if (/^\d{1,2}[-/]\d{1,2}[-/]\d{4}/.test(s)) {
+      var p = s.split(/[-/]/); d = new Date(p[2], p[1]-1, p[0]);
+    } else if (/^\d{1,2}\s+\w{3}\s+\d{4}/.test(s)) { d = new Date(s); }
+    else { d = new Date(s); }
+    if (isNaN(d.getTime())) return s;
+    var dd = ('0' + d.getDate()).slice(-2), mm = ('0' + (d.getMonth()+1)).slice(-2), yyyy = d.getFullYear();
+    return dd + '-' + mm + '-' + yyyy;
+  }
+  function hexA(c, a) {
+    if (!c) return 'rgba(29,201,234,' + a + ')';
+    if (c.charAt(0) === '#') {
+      var h = c.slice(1);
+      if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+      var r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+    }
+    var map = { 'var(--accent)':'29,201,234', 'var(--green)':'34,197,94', 'var(--orange)':'245,158,11', 'var(--red)':'239,68,68', 'var(--teal)':'20,184,166', 'var(--purple)':'192,132,252' };
+    var rgb = map[c] || '29,201,234';
+    return 'rgba(' + rgb + ',' + a + ')';
+  }
+  function countUp(el, target) {
+    var start = 0, dur = 700, t0 = performance.now();
+    function step(now) {
+      var p = Math.min(1, (now - t0) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(start + (target - start) * eased);
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+  function attachTilt(el) {
+    if (!el) return;
+    el.addEventListener('mousemove', function(e) {
+      var r = el.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = 'translateY(-4px) rotateX(' + (-y*8) + 'deg) rotateY(' + (x*8) + 'deg)';
+    });
+    el.addEventListener('mouseleave', function() { el.style.transform = ''; });
+  }
+
+  function buildAnalytics() {
+    var grid = document.getElementById('analyticsGrid');
+    if (!grid) return;
+    var total = currentRecords.length;
+    if (!total) { grid.innerHTML = '<div class="analytics-empty">No records yet. Click <b>+ Add Intern</b> to start building live insights.</div>'; return; }
+
+    // Domain distribution -> 3D bars
+    var domCounts = {}, maxDom = 0;
+    for (var i = 0; i < total; i++) {
+      var dm = currentRecords[i]['Domain Name'] || 'Unspecified';
+      domCounts[dm] = (domCounts[dm] || 0) + 1;
+      if (domCounts[dm] > maxDom) maxDom = domCounts[dm];
+    }
+    var domArr = [];
+    for (var k in domCounts) domArr.push([k, domCounts[k]]);
+    domArr.sort(function(a, b) { return b[1] - a[1]; });
+    domArr = domArr.slice(0, 7);
+    var domHtml = '<div class="chart3d">';
+    for (var d = 0; d < domArr.length; d++) {
+      var hgt = maxDom ? Math.round((domArr[d][1] / maxDom) * 100) : 0;
+      domHtml += '<div class="bar3d" title="'+esc(domArr[d][0])+': '+domArr[d][1]+'"><div class="bar3d-bar" style="height:0%" data-h="'+hgt+'"><span class="bar3d-val">'+domArr[d][1]+'</span></div><div class="bar3d-label">'+esc(shorten(domArr[d][0],9))+'</div></div>';
+    }
+    domHtml += '</div>';
+
+    // Current status -> donut
+    var stCounts = { 'Active':0, 'Pending Verification':0, 'Completed':0, 'Terminated':0, 'Resigned':0 };
+    for (var i2 = 0; i2 < total; i2++) {
+      var sv = currentRecords[i2]['Current Status'] || 'Other';
+      if (stCounts[sv] === undefined) stCounts[sv] = 0;
+      stCounts[sv]++;
+    }
+    var stOrder = ['Active','Pending Verification','Completed','Terminated','Resigned'];
+    var stColors = { 'Active':'#22c55e','Pending Verification':'#f59e0b','Completed':'#14b8a6','Terminated':'#ef4444','Resigned':'#64748b' };
+    var donut = donutSvg(total, stOrder.map(function(s){ return { v:stCounts[s]||0, c:stColors[s] }; }));
+    var donutHtml = '<div class="donut-big">'+donut+
+      '<div class="donut-center"><div class="dc-num">'+total+'</div><div class="dc-lbl">Interns</div></div></div>' +
+      '<div class="donut-legend" style="margin-left:8px">';
+    for (var si = 0; si < stOrder.length; si++) {
+      var sv2 = stOrder[si], c = stCounts[sv2] || 0;
+      donutHtml += '<div class="lg"><span class="sw" style="background:'+stColors[sv2]+'"></span>'+sv2+' <b style="margin-left:auto">'+c+'</b></div>';
+    }
+    donutHtml += '</div>';
+
+    // Validation -> radial gauge
+    var vPass = 0, vFail = 0, vOther = 0;
+    for (var i3 = 0; i3 < total; i3++) {
+      var vv = (currentRecords[i3]['Validation Status'] || '').toString().toLowerCase();
+      if (vv === 'passed') vPass++; else if (vv === 'failed') vFail++; else vOther++;
+    }
+    var checked = vPass + vFail;
+    var passPct = checked ? Math.round((vPass/checked)*100) : 0;
+    var gaugeHtml = '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">' +
+      gaugeSvg(passPct, '#22c55e') +
+      '<div class="donut-legend"><div class="lg"><span class="sw" style="background:#22c55e"></span>Passed <b style="margin-left:auto">'+vPass+'</b></div>' +
+      '<div class="lg"><span class="sw" style="background:#ef4444"></span>Failed <b style="margin-left:auto">'+vFail+'</b></div>' +
+      (vOther ? '<div class="lg"><span class="sw" style="background:#64748b"></span>Pending <b style="margin-left:auto">'+vOther+'</b></div>' : '') +
+      '</div></div>';
+
+    // Mail delivery -> radial gauge
+    var mSent = 0;
+    for (var i4 = 0; i4 < total; i4++) if ((currentRecords[i4]['Intern Mail Sent'] || '') === 'Yes') mSent++;
+    var mPct = total ? Math.round((mSent/total)*100) : 0;
+    var mailHtml = '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">' +
+      gaugeSvg(mPct, '#14b8a6') +
+      '<div class="donut-legend"><div class="lg"><span class="sw" style="background:#14b8a6"></span>Delivered <b style="margin-left:auto">'+mSent+'</b></div>' +
+      '<div class="lg"><span class="sw" style="background:#64748b"></span>Pending <b style="margin-left:auto">'+(total-mSent)+'</b></div></div></div>';
+
+    // Activity feed (recent + status mix)
+    var recent = currentRecords.slice().sort(function(a, b) { return (b.rowNumber||0) - (a.rowNumber||0); }).slice(0, 6);
+    var feedHtml = '<div class="feed">';
+    for (var ri = 0; ri < recent.length; ri++) {
+      var rr = recent[ri];
+      var nm = rr['Name'] || 'Unnamed';
+      var stt = (rr['Current Status'] || '').toString().toLowerCase();
+      var col = stt === 'active' ? '#22c55e' : stt.indexOf('pending') !== -1 ? '#f59e0b' : stt === 'completed' ? '#14b8a6' : stt === 'terminated' ? '#ef4444' : '#64748b';
+      feedHtml += '<div class="feed-item"><span class="feed-dot" style="background:'+col+';box-shadow:0 0 0 4px '+hexA(col,0.15)+'"></span>' +
+        '<div class="feed-body"><div class="feed-title">'+esc(nm)+'</div><div class="feed-sub">'+esc(rr['Domain Name']||'—')+(rr['Intern Code']?' · '+esc(rr['Intern Code']):'')+'</div></div>' +
+        '<div class="feed-time">'+esc(rr['Current Status']||'—')+'</div></div>';
+    }
+    feedHtml += '</div>';
+
+    grid.innerHTML =
+      '<div class="analytic-card" style="grid-column:1/-1"><h4><span class="dot"></span>Interns by Domain</h4>'+domHtml+'</div>' +
+      '<div class="analytic-card"><h4><span class="dot"></span>Current Status</h4><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">'+donutHtml+'</div></div>' +
+      '<div class="analytic-card"><h4><span class="dot"></span>Validation Rate</h4>'+gaugeHtml+'</div>' +
+      '<div class="analytic-card"><h4><span class="dot"></span>Mail Delivery</h4>'+mailHtml+'</div>' +
+      '<div class="analytic-card" style="grid-column:1/-1"><h4><span class="dot"></span>Recent Activity</h4>'+feedHtml+'</div>';
+
+    // animate bars
+    var bars = grid.querySelectorAll('.bar3d-bar');
+    setTimeout(function() { for (var b = 0; b < bars.length; b++) bars[b].style.height = bars[b].getAttribute('data-h') + '%'; }, 60);
+    // animate gauges
+    var g = grid.querySelectorAll('.gauge-arc');
+    setTimeout(function() { for (var gi2 = 0; gi2 < g.length; gi2++) { var gg = g[gi2]; gg.setAttribute('stroke-dasharray', gg.getAttribute('data-dash') + ' ' + (parseFloat(gg.getAttribute('data-total')) - parseFloat(gg.getAttribute('data-dash')))); } }, 60);
+    // animate donut segments
+    var ds = grid.querySelectorAll('.donut-seg');
+    setTimeout(function() { for (var dsi = 0; dsi < ds.length; dsi++) { var dd = ds[dsi]; dd.setAttribute('stroke-dasharray', dd.getAttribute('data-len') + ' ' + dd.getAttribute('data-rest')); } }, 60);
+
+    var up = document.getElementById('analyticsUpdated');
+    if (up) up.innerHTML = '<span class="live-dot"></span>live · ' + new Date().toLocaleTimeString();
+    startLiveClock();
+  }
+
+  var _liveClockTimer = null;
+  function startLiveClock() {
+    if (_liveClockTimer) return;
+    _liveClockTimer = setInterval(function() {
+      var up = document.getElementById('analyticsUpdated');
+      if (!up || !document.getElementById('dashboardScreen') || document.getElementById('dashboardScreen').style.display === 'none') return;
+      if (up.innerHTML.indexOf('live') !== -1) up.innerHTML = '<span class="live-dot"></span>live · ' + new Date().toLocaleTimeString();
+    }, 1000);
+  }
+
+  function shorten(s, n) { s = s || ''; return s.length > n ? s.substring(0, n-1) + '…' : s; }
+
+  function donutSvg(total, segs) {
+    var size = 150, stroke = 18, r = (size - stroke) / 2, c = 2 * Math.PI * r, cx = size/2, cy = size/2;
+    var svg = '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">';
+    var off = 0;
+    for (var i = 0; i < segs.length; i++) {
+      var frac = total ? segs[i].v / total : 0;
+      if (frac <= 0) continue;
+      var len = frac * c;
+      var rest = (c - len).toFixed(2);
+      svg += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+segs[i].c+'" stroke-width="'+stroke+'" stroke-dasharray="0 '+c.toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" data-len="'+len.toFixed(2)+'" data-rest="'+rest+'" class="donut-seg" style="transition:stroke-dasharray 1s cubic-bezier(.2,.8,.2,1)" transform="rotate(-90 '+cx+' '+cy+')"></circle>';
+      off += len;
+    }
+    svg += '</svg>';
+    return svg;
+  }
+
+  function gaugeSvg(value, color) {
+    var size = 120, stroke = 12, r = (size - stroke) / 2, c = 2 * Math.PI * r, cx = size/2, cy = size/2;
+    var dash = (value/100) * c;
+    return '<div class="gauge"><svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="var(--border)" stroke-width="'+stroke+'"></circle>' +
+      '<circle class="gauge-arc" cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="'+stroke+'" stroke-linecap="round" stroke-dasharray="0 '+c+'" data-dash="'+dash+'" data-total="'+c+'" style="transition:stroke-dasharray 1.1s cubic-bezier(.2,.8,.2,1)" transform="rotate(-90 '+cx+' '+cy+')"></circle>' +
+      '</svg><div class="gauge-center"><div class="g-num" style="color:'+color+'">'+value+'%</div><div class="g-lbl">rate</div></div></div>';
+  }
+
+   var _filterTimer = null;
+   function filterTable() {
+    if (_filterTimer) clearTimeout(_filterTimer);
+    _filterTimer = setTimeout(function() { _runFilter(); }, 120);
+   }
+   function _runFilter() {
+    var q = (document.getElementById('searchInput').value || '').toLowerCase();
+    var d = document.getElementById('filterDomain').value;
+    var s = document.getElementById('filterStatus').value;
+    filteredRecords = [];
+    for (var i = 0; i < currentRecords.length; i++) {
+      var r = currentRecords[i];
+      if (d && (r['Domain Name'] || '') !== d) continue;
+      if (s && (r['Current Status'] || '') !== s) continue;
+      var cfOk = true;
+      for (var cfi in colFilters) {
+        if (colFilters[cfi] && colFilters[cfi].length) {
+          var allowed = {};
+          for (var ai = 0; ai < colFilters[cfi].length; ai++) allowed[colFilters[cfi][ai].toLowerCase()] = true;
+          var rv = (r[currentHeaderKeys[Number(cfi)]] || '').toString().toLowerCase();
+          if (!allowed[rv]) { cfOk = false; break; }
+        }
+      }
+      if (!cfOk) continue;
+      if (q) {
+        var match = false;
+        for (var ki = 0; ki < currentHeaderKeys.length; ki++) {
+          var v = r[currentHeaderKeys[ki]];
+          if (v && v.toString().toLowerCase().indexOf(q) !== -1) { match = true; break; }
+        }
+        if (!match) continue;
+      }
+      filteredRecords.push(r);
+    }
+    currentPage = 1;
+    updateBulkUI();
+    renderTable();
+  }
+
+  function renderTable() {
+    var tb = document.getElementById('recordsBody');
+    if (!tb) return;
+    var totalPages = Math.max(1, Math.ceil(filteredRecords.length / pageSize));
+    if (currentPage > totalPages) currentPage = totalPages;
+    var start = (currentPage - 1) * pageSize;
+    var end = Math.min(start + pageSize, filteredRecords.length);
+    var pageData = filteredRecords.slice(start, end);
+    var totalCount = filteredRecords.length;
+    document.getElementById('recordCount').textContent = totalCount + ' records';
+    document.getElementById('paginationInfo').textContent = totalCount > 0 ? 'Showing ' + (start+1) + '-' + end + ' of ' + totalCount : 'Showing 0 records';
+    document.getElementById('prevPage').style.display = currentPage > 1 ? 'inline-flex' : 'none';
+    document.getElementById('nextPage').style.display = currentPage < totalPages ? 'inline-flex' : 'none';
+    if (pageData.length === 0) {
+      var colspan = Math.max(1, currentHeaders.length + 2);
+      tb.innerHTML = '<tr><td colspan="' + colspan + '"><div class="empty-state"><div class="empty-icon-wrap"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div class="empty-title">No records found</div><div class="empty-sub">Try adjusting your search or filters</div></div></td></tr>';
+      return;
+    }
+    var h = '';
+    for (var i = 0; i < pageData.length; i++) {
+      var r = pageData[i];
+      var rn = r.rowNumber;
+      var checked = selectedRowsObj[rn] ? 'checked' : '';
+      h += '<tr><td><input type="checkbox" class="row-check" ' + checked + ' onchange="toggleRowCheck('+rn+',this)"></td>';
+      for (var ki = 0; ki < currentHeaderKeys.length; ki++) {
+        var key = currentHeaderKeys[ki];
+        var val = r[key] !== undefined ? r[key] : '';
+        var disp = esc(val);
+        if (key === 'OnboardingDate' || key === 'StartDate' || key === 'EndDate') disp = esc(fmtDate(val));
+        if (key === 'InternCode' && val) {
+          h += '<td><span class="badge badge-accent" style="font-family:var(--mono);font-size:11px">' + disp + '</span></td>';
+        } else if (key === 'CurrentStatus') {
+          var sv = val.toString();
+          var pillCls = 'pill-orange';
+          if (sv === 'Active' || sv === 'Passed') pillCls = 'pill-green';
+          else if (sv === 'Completed') pillCls = 'pill-accent';
+          else if (sv === 'Terminated' || sv === 'Failed') pillCls = 'pill-red';
+          var dotCls = sv === 'Active' || sv === 'Passed' ? 'green' : sv === 'Completed' ? 'accent' : sv === 'Terminated' || sv === 'Failed' ? 'red' : 'orange';
+          h += '<td><span class="status-pill ' + pillCls + '"><span class="pill-dot ' + dotCls + '"></span>' + esc(sv) + '</span></td>';
+        } else if (key === 'InternMailSent' || key === 'TLMailSent') {
+          h += '<td>' + (val === 'Yes' ? '<span class="tick-yes" title="Sent">&#10003;</span>' : '<span class="tick-no" title="Not sent">&#10007;</span>') + '</td>';
+        } else if (key === 'DomainName' && val) {
+          h += '<td><span class="badge badge-accent" style="font-size:11px">' + disp + '</span></td>';
+        } else if (key === 'Name' && val) {
+          h += '<td><strong>' + disp + '</strong></td>';
+        } else if (key === 'OfferLetterLink' && val) {
+          h += '<td><a href="' + disp + '" target="_blank" rel="noopener" class="btn btn-ghost btn-xs" style="text-decoration:none">View PDF</a></td>';
+        } else {
+          var cellCls = 'cell-text';
+          var cellStyle = 'font-size:12px;white-space:normal;word-break:break-word;vertical-align:top';
+          if (key === 'MobileNo' || key === 'WhatsappNo') { cellCls = 'cell-mono'; }
+          else if (key === 'OnboardingDate') { cellCls = 'cell-date'; }
+          h += '<td style="' + cellStyle + '" class="' + cellCls + '" title="' + disp + '">' + disp + '</td>';
+        }
+      }
+      h += '<td class="action-col"><div class="action-group">' +
+        '<button class="btn btn-accent btn-xs" onclick="openEdit('+rn+')" title="Edit">Edit</button>' +
+        '<button class="btn btn-green btn-xs" onclick="confirmGenCode('+rn+')" title="Generate Code">Code</button>' +
+        '<button class="btn btn-orange btn-xs" onclick="confirmMail('+rn+')" title="Send Emails">Mail</button>' +
+        '<button class="btn btn-teal btn-xs" onclick="confirmTLMail('+rn+')" title="Send TL Email">TL</button>' +
+        '<button class="btn btn-red btn-xs" onclick="confirmDelete('+rn+')" title="Delete">Del</button>' +
+        '</div></td></tr>';
+    }
+    tb.innerHTML = h;
+  }
+
+  function changePage(delta) {
+    var totalPages = Math.max(1, Math.ceil(filteredRecords.length / pageSize));
+    currentPage = Math.max(1, Math.min(currentPage + delta, totalPages));
+    renderTable();
+  }
+
+  var EDIT_STATUS_OPTIONS = ['Active', 'Pending Verification', 'Completed', 'Terminated', 'Resigned'];
+  var EDIT_VALIDATION_OPTIONS = ['Passed', 'Failed'];
+  var EDIT_TEXTAREA_KEYS = { CurrentAddress: 1, PermanentAddress: 1, StatusReason: 1, ValidationReason: 1 };
+
+  function buildEditForm(record) {
+    var grid = document.getElementById('editGrid');
+    if (!grid) return;
+    var h = '';
+    for (var hi = 0; hi < currentHeaderKeys.length; hi++) {
+      var key = currentHeaderKeys[hi];
+      var label = currentHeaders[hi] || key;
+      var req = (key === 'Name' || key === 'EmailID' || key === 'DomainName' || key === 'CurrentStatus') ? ' <span class="req">*</span>' : '';
+      var idAttr = 'edit_' + key;
+      if (key === 'AssignedGroupName') {
+        h += '<div class="fg"><label>' + esc(label) + req + '</label><select id="' + idAttr + '"><option value="">— No Group —</option></select></div>';
+      } else if (key === 'CurrentStatus') {
+        h += '<div class="fg"><label>' + esc(label) + req + '</label><select id="' + idAttr + '">';
+        for (var si = 0; si < EDIT_STATUS_OPTIONS.length; si++) h += '<option value="' + EDIT_STATUS_OPTIONS[si] + '">' + EDIT_STATUS_OPTIONS[si] + '</option>';
+        h += '</select></div>';
+      } else if (key === 'ValidationStatus') {
+        h += '<div class="fg"><label>' + esc(label) + '</label><select id="' + idAttr + '">';
+        for (var vi = 0; vi < EDIT_VALIDATION_OPTIONS.length; vi++) h += '<option value="' + EDIT_VALIDATION_OPTIONS[vi] + '">' + EDIT_VALIDATION_OPTIONS[vi] + '</option>';
+        h += '</select></div>';
+      } else if (key === 'DomainName') {
+        h += '<div class="fg"><label>' + esc(label) + req + '</label><select id="' + idAttr + '"><option value="">-- Select Domain --</option>';
+        for (var di = 0; di < allDomains.length; di++) h += '<option value="' + esc(allDomains[di]) + '">' + esc(allDomains[di]) + '</option>';
+        h += '</select></div>';
+      } else if (key === 'OfferLetterLink') {
+        h += '<div class="fg full"><label>' + esc(label) + '</label>';
+        h += '<input type="text" id="' + idAttr + '" placeholder="No file uploaded">';
+        if (record[key]) h += '<a href="' + esc(record[key]) + '" target="_blank" rel="noopener" class="link-view">View uploaded PDF</a>';
+        h += '</div>';
+      } else if (EDIT_TEXTAREA_KEYS[key]) {
+        h += '<div class="fg full"><label>' + esc(label) + '</label><textarea id="' + idAttr + '" rows="2"></textarea></div>';
+      } else {
+        h += '<div class="fg"><label>' + esc(label) + req + '</label><input type="text" id="' + idAttr + '"></div>';
+      }
+    }
+    grid.innerHTML = h;
+    for (var hi2 = 0; hi2 < currentHeaderKeys.length; hi2++) {
+      var k = currentHeaderKeys[hi2];
+      var el = document.getElementById('edit_' + k);
+      if (el && record[k] !== undefined) el.value = record[k];
+    }
+  }
+
+  function openEdit(rn) {
+    var r = getRec(rn);
+    if (!r) { toast('Record not found', 'red'); return; }
+    document.getElementById('editRowNum').value = rn;
+    buildEditForm(r);
+    var dEl = document.getElementById('edit_DomainName');
+    if (dEl) dEl.onchange = function() { loadGroupsForEdit(dEl.value); };
+    document.getElementById('editModal').classList.add('open');
+    loadGroupsForEdit(r['Domain Name'] || '', r['Assigned Group Name']);
+  }
+
+  function loadGroupsForEdit(domain, selectedGroup) {
+    var sel = document.getElementById('edit_AssignedGroupName');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— No Group —</option>';
+    if (!domain) return;
+    if (groupCache[domain]) { _fillGroupSelect(sel, groupCache[domain], selectedGroup); return; }
+    showSpinner('Loading groups...');
+    google.script.run
+      .withSuccessHandler(function(names) {
+        hideSpinner();
+        if (names && Array.isArray(names)) {
+          groupCache[domain] = names;
+          projectNames = names;
+          _fillGroupSelect(sel, names, selectedGroup);
+        } else if (selectedGroup) sel.value = selectedGroup;
+      })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error loading groups: ' + e, 'red'); })
+      .fetchProjectGroupsByDomain(domain);
+  }
+  function _fillGroupSelect(sel, names, selectedGroup) {
+    for (var gi = 0; gi < names.length; gi++) {
+      var opt = document.createElement('option');
+      opt.value = names[gi];
+      opt.textContent = names[gi];
+      sel.appendChild(opt);
+    }
+    if (selectedGroup) sel.value = selectedGroup;
+  }
+
+  function saveEdit() {
+    var rn = document.getElementById('editRowNum').value;
+    var f = {};
+    for (var hi = 0; hi < currentHeaderKeys.length; hi++) {
+      var key = currentHeaderKeys[hi];
+      var el = document.getElementById('edit_' + key);
+      if (el) f[key] = el.value;
+    }
+    if (!f['Name'] || !f['EmailID'] || !f['DomainName']) { toast('Name, Email and Domain required', 'red'); return; }
+    showSpinner('Saving...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Record updated', 'green'); closeModal('editModal'); refreshRecords(); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .updateInternFullRecord(Number(rn), f);
+  }
+
+  function getRec(rn) { for (var i = 0; i < currentRecords.length; i++) { if (currentRecords[i].rowNumber == rn) return currentRecords[i]; } return null; }
+
+  function openAddIntern() {
+    var grid = document.getElementById('addInternGrid');
+    if (!grid) return;
+    var h = '';
+    // core fields first
+    var coreKeys = ['Intern Code','Onboarding Date','Name','Email ID','Mobile No','Domain Name','Start Date','End Date','Current Status','Validation Status','Assigned Group Name'];
+    for (var ci = 0; ci < coreKeys.length; ci++) {
+      var key = coreKeys[ci];
+      var idAttr = 'add_' + key.replace(/[^a-zA-Z0-9]/g, '');
+      if (key === 'Assigned Group Name') {
+        h += '<div class="fg"><label>'+esc(key)+'</label><select id="'+idAttr+'"><option value="">— No Group —</option></select></div>';
+      } else if (key === 'Current Status') {
+        h += '<div class="fg"><label>'+esc(key)+' <span class="req">*</span></label><select id="'+idAttr+'"><option value="">-- Select --</option>';
+        for (var si=0; si<EDIT_STATUS_OPTIONS.length; si++) h += '<option value="'+EDIT_STATUS_OPTIONS[si]+'">'+EDIT_STATUS_OPTIONS[si]+'</option>';
+        h += '</select></div>';
+      } else if (key === 'Validation Status') {
+        h += '<div class="fg"><label>'+esc(key)+'</label><select id="'+idAttr+'"><option value="">-- Select --</option>';
+        for (var vi=0; vi<EDIT_VALIDATION_OPTIONS.length; vi++) h += '<option value="'+EDIT_VALIDATION_OPTIONS[vi]+'">'+EDIT_VALIDATION_OPTIONS[vi]+'</option>';
+        h += '</select></div>';
+      } else if (key === 'Domain Name') {
+        h += '<div class="fg"><label>'+esc(key)+' <span class="req">*</span></label><select id="'+idAttr+'"><option value="">-- Select Domain --</option>';
+        for (var di=0; di<allDomains.length; di++) h += '<option value="'+esc(allDomains[di])+'">'+esc(allDomains[di])+'</option>';
+        h += '</select></div>';
+      } else {
+        h += '<div class="fg"><label>'+esc(key)+((key==='Name'||key==='Email ID')?' <span class="req">*</span>':'')+'</label><input type="text" id="'+idAttr+'"></div>';
+      }
+    }
+    grid.innerHTML = h;
+    var dEl = document.getElementById('add_DomainName');
+    if (dEl) dEl.onchange = function() { addLoadGroups(dEl.value); };
+    document.getElementById('addInternModal').classList.add('open');
+  }
+
+  function addLoadGroups(domain) {
+    var sel = document.getElementById('add_AssignedGroupName');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— No Group —</option>';
+    if (!domain) return;
+    if (groupCache[domain]) { _fillGroupSelect(sel, groupCache[domain], null); return; }
+    google.script.run
+      .withSuccessHandler(function(names) {
+        if (names && Array.isArray(names)) { groupCache[domain] = names; _fillGroupSelect(sel, names, null); }
+      })
+      .withFailureHandler(function(e) { toast('Group load error: '+e,'red'); })
+      .fetchProjectGroupsByDomain(domain);
+  }
+
+  function saveAddIntern() {
+    var f = {};
+    var keys = ['Intern Code','Onboarding Date','Name','Email ID','Mobile No','Domain Name','Start Date','End Date','Current Status','Validation Status','Assigned Group Name'];
+    for (var i=0; i<keys.length; i++) {
+      var el = document.getElementById('add_'+keys[i]);
+      if (el) f[keys[i].replace(/[^a-zA-Z0-9]/g, '')] = el.value;
+    }
+    if (!f['Name'] || !f['EmailID'] || !f['DomainName']) { toast('Name, Email and Domain are required','red'); return; }
+    showSpinner('Creating intern...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Intern created','green'); closeModal('addInternModal'); refreshRecords(); } else { toast('Error: '+((r&&r.error)||'Failed'),'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: '+e,'red'); })
+      .addInternRecord(f);
+  }
+
+  function confirmGenCode(rn) {
+    pendingConfirm = function() { genCode(rn); };
+    document.getElementById('confirmTitle').textContent = 'Generate Code';
+    document.getElementById('confirmMsg').textContent = 'This will generate an intern code and mark the record as Active. Continue?';
+    document.getElementById('confirmBtn').className = 'btn btn-green';
+    document.getElementById('confirmBtn').textContent = 'Generate';
+    document.getElementById('confirmModal').classList.add('open');
+  }
+
+  function genCode(rn) {
+    showSpinner('Generating code...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Code: ' + r.code, 'green'); refreshRecords(); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .forceCodeGeneration(Number(rn));
+  }
+
+  function confirmMail(rn) {
+    pendingConfirm = function() { sendMail(rn); };
+    document.getElementById('confirmTitle').textContent = 'Send Onboarding Emails';
+    document.getElementById('confirmMsg').textContent = 'This will send welcome emails to the intern and their team lead. Continue?';
+    document.getElementById('confirmBtn').className = 'btn btn-orange';
+    document.getElementById('confirmBtn').textContent = 'Send';
+    document.getElementById('confirmModal').classList.add('open');
+  }
+
+  function sendMail(rn) {
+    showSpinner('Sending emails...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Emails sent', 'green'); refreshRecords(); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .fireOnboardingMails(Number(rn));
+  }
+
+  function confirmTLMail(rn) {
+    pendingConfirm = function() { sendTLMail(rn); };
+    document.getElementById('confirmTitle').textContent = 'Send Team Lead Email';
+    document.getElementById('confirmMsg').textContent = 'This will send the intern assignment email to the Team Lead (from Program Details). Continue?';
+    document.getElementById('confirmBtn').className = 'btn btn-teal';
+    document.getElementById('confirmBtn').textContent = 'Send TL';
+    document.getElementById('confirmModal').classList.add('open');
+  }
+
+  function sendTLMail(rn) {
+    showSpinner('Sending TL email...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Team Lead email sent', 'green'); refreshRecords(); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .sendTLMail(Number(rn));
+  }
+
+  function confirmDelete(rn) {
+    pendingConfirm = function() { deleteRecord(rn); };
+    document.getElementById('confirmTitle').textContent = 'Delete Record';
+    document.getElementById('confirmMsg').textContent = 'This will permanently delete this intern record. This action cannot be undone. Continue?';
+    document.getElementById('confirmBtn').className = 'btn btn-red';
+    document.getElementById('confirmBtn').textContent = 'Delete';
+    document.getElementById('confirmModal').classList.add('open');
+  }
+
+  function deleteRecord(rn) {
+    showSpinner('Deleting...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Record deleted', 'green'); refreshRecords(); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .deleteInternRecord(Number(rn));
+  }
+
+  function confirmAction() { closeModal('confirmModal'); if (pendingConfirm) { pendingConfirm(); pendingConfirm = null; } }
+
+  function loadProgramDetails() {
+    google.script.run
+      .withSuccessHandler(function(d) { currentProgram = d || []; renderProgramDetails(); })
+      .withFailureHandler(function() {})
+      .fetchProgramDetails();
+  }
+
+  function renderProgramDetails() {
+    var db = document.getElementById('programDomainBody');
+    var gb = document.getElementById('programGroupBody');
+    if (db) {
+      if (!currentProgram || currentProgram.length === 0) {
+        db.innerHTML = '<tr><td colspan="2"><div class="empty-state" style="padding:30px"><div class="empty-title">No domains added</div></div></td></tr>';
+      } else {
+        var dh = '';
+        for (var i = 0; i < currentProgram.length; i++) {
+          var r = currentProgram[i];
+          dh += '<tr class="row-enter" style="animation-delay:'+(i*45)+'ms"><td>'+esc(r.domainName||'')+'</td>'+
+            '<td><button class="btn btn-blue btn-xs" onclick="editProgramDomain('+(r.rowNumber)+')">Edit</button> '+
+            '<button class="btn btn-red btn-xs" onclick="confirmDeleteProgram('+(r.rowNumber)+')">Delete</button></td></tr>';
+        }
+        db.innerHTML = dh;
+      }
+    }
+    if (gb) {
+      if (!currentProgram || currentProgram.length === 0) {
+        gb.innerHTML = '<tr><td colspan="3"><div class="empty-state" style="padding:30px"><div class="empty-title">No project groups added</div></div></td></tr>';
+      } else {
+        var gh = '';
+        for (var j = 0; j < currentProgram.length; j++) {
+          var rr = currentProgram[j];
+          gh += '<tr class="row-enter" style="animation-delay:'+(j*45)+'ms"><td>'+esc(rr.domainName||'')+'</td>'+
+            '<td><strong>'+esc(rr.groupName||'')+'</strong></td>'+
+            '<td><button class="btn btn-blue btn-xs" onclick="editProgramEntry('+(rr.rowNumber)+')">Edit</button> '+
+            '<button class="btn btn-red btn-xs" onclick="confirmDeleteProgram('+(rr.rowNumber)+')">Delete</button></td></tr>';
+        }
+        gb.innerHTML = gh;
+      }
+    }
+  }
+
+  function editProgramEntry(rn) {
+    var r = null;
+    for (var i = 0; i < currentProgram.length; i++) { if (currentProgram[i].rowNumber == rn) { r = currentProgram[i]; break; } }
+    if (!r) return;
+    document.getElementById('progGroupRowNum').value = rn;
+    document.getElementById('progGroupName').value = r.groupName || '';
+    document.getElementById('progGroupFormTitle').textContent = 'Edit Project Group Name';
+  }
+
+  function saveProgramEntry() {
+    var rn = document.getElementById('progGroupRowNum').value;
+    var gn = document.getElementById('progGroupName').value.trim();
+    if (!gn) { toast('Project Group Name required', 'red'); return; }
+    showSpinner('Saving...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Saved', 'green'); resetProgramForm(); loadProgramDetails(); flashSavedRow('programGroupBody', r.rowNumber); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .writeProgramSetting(rn, '', gn);
+  }
+
+  function resetProgramForm() {
+    document.getElementById('progGroupRowNum').value = '0';
+    document.getElementById('progGroupName').value = '';
+    document.getElementById('progGroupFormTitle').textContent = 'Add Project Group Name';
+  }
+
+  function editProgramDomain(rn) {
+    var r = null;
+    for (var i = 0; i < currentProgram.length; i++) { if (currentProgram[i].rowNumber == rn) { r = currentProgram[i]; break; } }
+    if (!r) return;
+    document.getElementById('progDomainRowNum').value = rn;
+    document.getElementById('progDomainText').value = r.domainName || '';
+    document.getElementById('progDomainFormTitle').textContent = 'Edit Domain Name';
+  }
+
+  function saveProgramDomain() {
+    var rn = document.getElementById('progDomainRowNum').value;
+    var dm = document.getElementById('progDomainText').value.trim();
+    if (!dm) { toast('Domain Name required', 'red'); return; }
+    showSpinner('Saving...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Saved', 'green'); resetProgramDomainForm(); loadProgramDetails(); flashSavedRow('programDomainBody', r.rowNumber); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .writeProgramDomain(rn, dm);
+  }
+
+  function resetProgramDomainForm() {
+    document.getElementById('progDomainRowNum').value = '0';
+    document.getElementById('progDomainText').value = '';
+    document.getElementById('progDomainFormTitle').textContent = 'Add Domain Name';
+  }
+
+  function confirmDeleteProgram(rn) {
+    pendingConfirm = function() {
+      showSpinner('Deleting...');
+      google.script.run
+        .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Deleted', 'green'); loadProgramDetails(); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+        .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+        .deleteProgramSetting(Number(rn));
+    };
+    document.getElementById('confirmTitle').textContent = 'Delete Program Detail';
+    document.getElementById('confirmMsg').textContent = 'This will remove the row from Program Details. Continue?';
+    document.getElementById('confirmBtn').className = 'btn btn-red';
+    document.getElementById('confirmBtn').textContent = 'Delete';
+    document.getElementById('confirmModal').classList.add('open');
+  }
+
+  function esc(s) {
+    if (typeof s !== 'string') return s;
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function toggleColFilter(colIdx, ev) {
+    var existing = document.getElementById('cfm-' + colIdx);
+    if (existing) { existing.remove(); return; }
+    var prevMenus = document.querySelectorAll('.col-filter-menu');
+    for (var pmi = 0; pmi < prevMenus.length; pmi++) prevMenus[pmi].remove();
+    var unique = {};
+    for (var fi = 0; fi < currentRecords.length; fi++) {
+      var fv = currentRecords[fi][currentHeaderKeys[colIdx]];
+      if (fv !== undefined && fv !== null && fv !== '') unique[fv.toString()] = true;
+    }
+    var vals = Object.keys(unique).sort();
+    var ths = document.querySelectorAll('#recordsHead th');
+    var th = ths[colIdx + 1];
+    if (!th) return;
+    var rect = th.getBoundingClientRect();
+    var menu = document.createElement('div');
+    menu.className = 'col-filter-menu';
+    menu.id = 'cfm-' + colIdx;
+    menu.style.display = 'block';
+    menu.style.position = 'fixed';
+    menu.style.left = Math.min(rect.left, window.innerWidth - 260) + 'px';
+    menu.style.top = (rect.bottom + 4) + 'px';
+    menu.style.zIndex = '9999';
+    menu.style.background = 'var(--card-bg)';
+    menu.style.border = '1px solid var(--border-light)';
+    menu.style.borderRadius = 'var(--radius)';
+    menu.style.padding = '8px';
+    menu.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)';
+    menu.style.width = '220px';
+    menu.style.maxHeight = '280px';
+    menu.style.overflowY = 'auto';
+    menu.style.fontSize = '12px';
+    var cur = colFilters[colIdx] || [];
+    var curMap = {};
+    for (var ci = 0; ci < cur.length; ci++) curMap[cur[ci]] = true;
+    for (var vi = 0; vi < vals.length; vi++) {
+      var label = document.createElement('label');
+      label.style.display = 'block';
+      label.style.padding = '4px 6px';
+      label.style.cursor = 'pointer';
+      label.style.borderRadius = '4px';
+      label.style.whiteSpace = 'nowrap';
+      label.style.overflow = 'hidden';
+      label.style.textOverflow = 'ellipsis';
+      label.onmouseover = function() { this.style.background = 'var(--bg-hover)'; };
+      label.onmouseout = function() { this.style.background = 'transparent'; };
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.checked = !!curMap[vals[vi]];
+      cb.style.marginRight = '6px';
+      cb.style.verticalAlign = 'middle';
+      cb.dataset.val = vals[vi];
+      cb.onchange = function() { applyColFilter(colIdx); };
+      label.appendChild(cb);
+      label.appendChild(document.createTextNode(vals[vi]));
+      menu.appendChild(label);
+    }
+    if (vals.length) {
+      var btnRow = document.createElement('div');
+      btnRow.style.display = 'flex';
+      btnRow.style.gap = '6px';
+      btnRow.style.marginTop = '6px';
+      btnRow.style.borderTop = '1px solid var(--border-light)';
+      btnRow.style.paddingTop = '6px';
+      var okBtn = document.createElement('button');
+      okBtn.textContent = 'Apply';
+      okBtn.className = 'btn btn-blue btn-xs';
+      okBtn.onclick = function() { applyColFilter(colIdx); menu.remove(); };
+      btnRow.appendChild(okBtn);
+      var clrBtn = document.createElement('button');
+      clrBtn.textContent = 'Clear';
+      clrBtn.className = 'btn btn-ghost btn-xs';
+      clrBtn.onclick = function() { clearColFilter(colIdx); menu.remove(); };
+      btnRow.appendChild(clrBtn);
+      menu.appendChild(btnRow);
+    } else {
+      var empty = document.createElement('div');
+      empty.style.padding = '12px';
+      empty.style.textAlign = 'center';
+      empty.style.color = 'var(--text-tertiary)';
+      empty.textContent = 'No values';
+      menu.appendChild(empty);
+    }
+    document.body.appendChild(menu);
+    var closeHandler = function(ev2) { if (!menu.contains(ev2.target) && ev2.target !== th.querySelector('.col-filter-icon')) { menu.remove(); document.removeEventListener('click', closeHandler); } };
+    setTimeout(function() { document.addEventListener('click', closeHandler); }, 10);
+  }
+
+  function applyColFilter(colIdx) {
+    var menu = document.getElementById('cfm-' + colIdx);
+    var cbs = menu ? menu.querySelectorAll('input[type=checkbox]') : [];
+    var sel = [];
+    for (var ai = 0; ai < cbs.length; ai++) {
+      if (cbs[ai].checked) sel.push(cbs[ai].dataset.val);
+    }
+    if (sel.length) colFilters[colIdx] = sel;
+    else delete colFilters[colIdx];
+    filterTable();
+  }
+
+  function clearColFilter(colIdx) {
+    delete colFilters[colIdx];
+    filterTable();
+  }
+
+  function toggleRowCheck(rn, cb) {
+    if (cb.checked) selectedRowsObj[rn] = true;
+    else delete selectedRowsObj[rn];
+    var allCb = document.querySelector('.check-all');
+    if (allCb) allCb.checked = Object.keys(selectedRowsObj).length === filteredRecords.length && filteredRecords.length > 0;
+    updateBulkUI();
+  }
+
+  function toggleAllCheck(cb) {
+    if (cb.checked) {
+      for (var tai = 0; tai < filteredRecords.length; tai++) {
+        selectedRowsObj[filteredRecords[tai].rowNumber] = true;
+      }
+    } else {
+      selectedRowsObj = {};
+    }
+    var rows = document.querySelectorAll('.row-check');
+    for (var tai2 = 0; tai2 < rows.length; tai2++) rows[tai2].checked = !!cb.checked;
+    updateBulkUI();
+  }
+
+  function updateBulkUI() {
+    var cnt = Object.keys(selectedRowsObj).length;
+    var bar = document.getElementById('bulkBar');
+    if (!bar) return;
+    var bi = document.getElementById('bulkInternMail');
+    var bt = document.getElementById('bulkTLMail');
+    if (cnt > 0) {
+      bar.style.display = 'flex';
+      document.getElementById('selInfo').textContent = cnt + ' selected';
+      if (bi) bi.disabled = false;
+      if (bt) bt.disabled = false;
+    } else {
+      bar.style.display = 'none';
+      if (bi) bi.disabled = true;
+      if (bt) bt.disabled = true;
+    }
+  }
+
+  function sendBulk(type) {
+    var rows = Object.keys(selectedRowsObj);
+    if (rows.length === 0) { toast('No rows selected', 'orange'); return; }
+    var label = type === 'tl' ? 'team lead' : 'intern';
+    pendingConfirm = function() { sendBulkMails(rows, type); };
+    document.getElementById('confirmTitle').textContent = 'Send Bulk ' + (type === 'tl' ? 'TL' : 'Intern') + ' Emails';
+    document.getElementById('confirmMsg').textContent = 'Send onboarding emails to ' + rows.length + ' selected ' + label + '(s)?';
+    document.getElementById('confirmBtn').className = 'btn btn-orange';
+    document.getElementById('confirmBtn').textContent = 'Send All';
+    document.getElementById('confirmModal').classList.add('open');
+  }
+
+  function sendBulkMails(rowNums, type) {
+    showSpinner('Sending bulk emails...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Bulk emails sent to ' + (r.sent || rowNums.length) + ' intern(s)', 'green'); selectedRowsObj = {}; updateBulkUI(); refreshRecords(); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .sendBulkEmails(rowNums.map(function(n) { return Number(n); }), type);
+  }
+
+  function loadProjectDetails() {
+    showSpinner('Loading project groups...');
+    google.script.run
+      .withSuccessHandler(function(d) {
+        hideSpinner();
+        currentProject = d || [];
+        renderProjectDetails();
+        populateProjectDropdowns();
+      })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .fetchProjectDetails();
+  }
+
+  function populateProjectDropdowns() {
+    var groups = [], domains = [];
+    if (currentProgram && currentProgram.length) {
+      for (var i = 0; i < currentProgram.length; i++) {
+        var g = (currentProgram[i].groupName || '').trim();
+        var d = (currentProgram[i].domainName || '').trim();
+        if (g && groups.indexOf(g) === -1) groups.push(g);
+        if (d && domains.indexOf(d) === -1) domains.push(d);
+      }
+    }
+    if (allDomains && allDomains.length) {
+      for (var ai = 0; ai < allDomains.length; ai++) {
+        if (domains.indexOf(allDomains[ai]) === -1) domains.push(allDomains[ai]);
+      }
+    }
+    domains.sort();
+    var gSel = document.getElementById('projGroupName');
+    if (gSel) {
+      var gHtml = '<option value="">Select group from Program Details</option>';
+      for (var gi = 0; gi < groups.length; gi++) gHtml += '<option value="' + esc(groups[gi]) + '">' + esc(groups[gi]) + '</option>';
+      gSel.innerHTML = gHtml;
+    }
+    var dl = document.getElementById('projDomainOptions');
+    if (dl) {
+      var dHtml = '';
+      for (var di = 0; di < domains.length; di++) dHtml += '<option value="' + esc(domains[di]) + '">';
+      dl.innerHTML = dHtml;
+    }
+  }
+
+  function projAddDomain(val) {
+    val = (val || '').trim();
+    if (!val) return;
+    var hidden = document.getElementById('projDomain');
+    var cur = (hidden.value ? hidden.value.split(',').map(function(x){return x.trim();}) : []);
+    if (cur.indexOf(val) === -1) {
+      cur.push(val);
+      hidden.value = cur.join(', ');
+      renderProjDomainChips();
+    }
+    var inp = document.getElementById('projDomainInput');
+    if (inp) inp.value = '';
+  }
+
+  function projRemoveDomain(val) {
+    var hidden = document.getElementById('projDomain');
+    var cur = (hidden.value ? hidden.value.split(',').map(function(x){return x.trim();}) : []).filter(function(x){ return x !== val; });
+    hidden.value = cur.join(', ');
+    renderProjDomainChips();
+  }
+
+  function renderProjDomainChips() {
+    var list = document.getElementById('projDomainChipList');
+    var hidden = document.getElementById('projDomain');
+    if (!list || !hidden) return;
+    var cur = (hidden.value ? hidden.value.split(',').map(function(x){return x.trim();}).filter(Boolean) : []);
+    var h = '';
+    for (var i = 0; i < cur.length; i++) {
+      h += '<span class="chip" data-v="'+esc(cur[i])+'">'+esc(cur[i])+'<button type="button" class="chip-x" onclick="projRemoveDomain(\''+esc(cur[i]).replace(/'/g,"\\'")+'\')">&times;</button></span>';
+    }
+    list.innerHTML = h;
+  }
+
+  function flashSavedRow(tbodyId, rowNumber) {
+    if (!rowNumber) return;
+    setTimeout(function() {
+      var tb = document.getElementById(tbodyId);
+      if (!tb) return;
+      var rows = tb.querySelectorAll('tr');
+      for (var i = 0; i < rows.length; i++) {
+        if (currentProject && tbodyId === 'projectBody') {
+          var pr = currentProject[i];
+          if (pr && pr.rowNumber == rowNumber) { rows[i].classList.add('saved-flash'); setTimeout(function(r){ return function(){ r.classList.remove('saved-flash'); }; }(rows[i]), 900); break; }
+        } else if (currentProgram && tbodyId === 'programBody') {
+          var pg = currentProgram[i];
+          if (pg && pg.rowNumber == rowNumber) { rows[i].classList.add('saved-flash'); setTimeout(function(r){ return function(){ r.classList.remove('saved-flash'); }; }(rows[i]), 900); break; }
+        }
+      }
+    }, 60);
+  }
+
+  function renderProjectDetails() {
+    var tb = document.getElementById('projectBody');
+    if (!tb) return;
+    if (!currentProject || currentProject.length === 0) {
+      tb.innerHTML = '<tr><td colspan="5"><div class="empty-state" style="padding:30px"><div class="empty-title">No project groups</div><div class="empty-sub">Add your first group using the form</div></div></td></tr>';
+      return;
+    }
+    var h = '';
+    for (var pdi = 0; pdi < currentProject.length; pdi++) {
+      var pr = currentProject[pdi];
+      h += '<tr class="row-enter" style="animation-delay:'+(pdi*45)+'ms"><td><strong>' + esc(pr.groupName || '') + '</strong></td>' +
+        '<td style="font-size:12px">' + esc(pr.emailId || '') + '</td>' +
+        '<td style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis" class="truncate">' + esc(pr.whatsappLink || '') + '</td>' +
+        '<td><span class="badge badge-blue">' + esc(pr.domainName || '') + '</span></td>' +
+        '<td class="action-col"><button class="btn btn-blue btn-xs" onclick="editProjectEntry(' + (pr.rowNumber) + ')">Edit</button> ' +
+        '<button class="btn btn-red btn-xs" onclick="deleteProjectEntry(' + (pr.rowNumber) + ')">Del</button></td></tr>';
+    }
+    tb.innerHTML = h;
+  }
+
+  function saveProjectEntry() {
+    var rn = document.getElementById('projRowNum').value;
+    var gn = document.getElementById('projGroupName').value.trim();
+    var em = document.getElementById('projEmail').value.trim();
+    var wa = document.getElementById('projWhatsapp').value.trim();
+    var dm = (document.getElementById('projDomain').value || '').split(',').map(function(x){return x.trim();}).filter(Boolean).join(', ');
+    if (!gn || !dm) { toast('Group Name and at least one Domain required', 'red'); return; }
+    showSpinner('Saving...');
+    google.script.run
+      .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Saved', 'green'); resetProjectForm(); loadProjectDetails(); loadDomains(); flashSavedRow('projectBody', r.rowNumber); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .writeProjectSetting(rn, gn, em, wa, dm);
+  }
+
+  function editProjectEntry(rn) {
+    var r = null;
+    for (var epi = 0; epi < currentProject.length; epi++) { if (currentProject[epi].rowNumber == rn) { r = currentProject[epi]; break; } }
+    if (!r) return;
+    document.getElementById('projRowNum').value = rn;
+    document.getElementById('projEmail').value = r.emailId || '';
+    document.getElementById('projWhatsapp').value = r.whatsappLink || '';
+    document.getElementById('projFormTitle').textContent = 'Edit Project Group';
+    populateProjectDropdowns();
+    var gSel = document.getElementById('projGroupName');
+    if (gSel && r.groupName && !(function(){ for (var oi = 0; oi < gSel.options.length; oi++) { if (gSel.options[oi].value === r.groupName) return true; } return false; })()) {
+      var opt = document.createElement('option');
+      opt.value = r.groupName; opt.textContent = r.groupName;
+      gSel.appendChild(opt);
+    }
+    if (gSel) gSel.value = r.groupName || '';
+    document.getElementById('projDomain').value = (r.domainName || '').split(',').map(function(x){return x.trim();}).filter(Boolean).join(', ');
+    renderProjDomainChips();
+    window.scrollTo({top: document.getElementById('tabProjectDetails').offsetTop, behavior: 'smooth'});
+  }
+
+  function deleteProjectEntry(rn) {
+    pendingConfirm = function() {
+      showSpinner('Deleting...');
+      google.script.run
+        .withSuccessHandler(function(r) { hideSpinner(); if (r && r.success) { toast('Deleted', 'green'); loadProjectDetails(); loadDomains(); } else { toast('Error: ' + ((r && r.error) || 'Failed'), 'red'); } })
+        .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+        .deleteProjectSetting(Number(rn));
+    };
+    document.getElementById('confirmTitle').textContent = 'Delete Project Group';
+    document.getElementById('confirmMsg').textContent = 'This will permanently delete this project group. Continue?';
+    document.getElementById('confirmBtn').className = 'btn btn-red';
+    document.getElementById('confirmBtn').textContent = 'Delete';
+    document.getElementById('confirmModal').classList.add('open');
+  }
+
+  function resetProjectForm() {
+    document.getElementById('projRowNum').value = '0';
+    document.getElementById('projEmail').value = '';
+    document.getElementById('projWhatsapp').value = '';
+    var gSel = document.getElementById('projGroupName');
+    if (gSel) gSel.value = '';
+    document.getElementById('projDomain').value = '';
+    renderProjDomainChips();
+    document.getElementById('projFormTitle').textContent = 'Add Project Group';
+  }
+
+  function initRegistrationToggle() {
+    var wrap = document.getElementById('regToggleWrap');
+    var chk = document.getElementById('regToggleChk');
+    if (!wrap || !chk) return;
+    wrap.classList.add('loading');
+    google.script.run
+      .withSuccessHandler(function(r) { wrap.classList.remove('loading'); updateRegToggleLabel(r && r.enabled); })
+      .withFailureHandler(function() { wrap.classList.remove('loading'); updateRegToggleLabel(true); })
+      .getRegistrationStatus();
+  }
+
+  function updateRegToggleLabel(enabled) {
+    var wrap = document.getElementById('regToggleWrap');
+    var chk = document.getElementById('regToggleChk');
+    var lbl = document.getElementById('regToggleLabel');
+    if (!wrap || !chk) return;
+    chk.checked = !!enabled;
+    if (enabled) { wrap.classList.add('on'); if (lbl) lbl.textContent = 'Registration Enabled'; }
+    else { wrap.classList.remove('on'); if (lbl) lbl.textContent = 'Registration Disabled'; }
+  }
+
+  function toggleRegistration() {
+    var wrap = document.getElementById('regToggleWrap');
+    var chk = document.getElementById('regToggleChk');
+    if (!wrap || !chk || wrap.classList.contains('loading')) return;
+    var newEnabled = chk.checked;
+    updateRegToggleLabel(newEnabled);
+    toast('Intern registration ' + (newEnabled ? 'enabled' : 'disabled'), newEnabled ? 'green' : 'red');
+    google.script.run
+      .withSuccessHandler(function(r) { if (r && r.enabled === false) { updateRegToggleLabel(false); toast('Reverted: save failed', 'red'); } })
+      .withFailureHandler(function(e) { updateRegToggleLabel(!newEnabled); toast('Error: ' + e + ' (reverted)', 'red'); })
+      .setRegistrationStatus(newEnabled);
+  }
+
+  // ===== Team Lead =====
+  function openTLLogin() {
+    closeModal('loginModal');
+    document.getElementById('tlEmail').value = '';
+    document.getElementById('tlPassword').value = '';
+    document.getElementById('tlLoginError').textContent = '';
+    openModal('tlLoginModal');
+  }
+
+  function tlLogin() {
+    var email = document.getElementById('tlEmail').value.trim();
+    var pass = document.getElementById('tlPassword').value;
+    var err = document.getElementById('tlLoginError');
+    if (!email || !pass) { err.textContent = 'Email and password required'; return; }
+    err.textContent = '';
+    showSpinner('Verifying…');
+    google.script.run
+      .withSuccessHandler(function(r) {
+        hideSpinner();
+        if (r && r.ok) {
+          tlGroup = r.groupName;
+          closeModal('tlLoginModal');
+          document.getElementById('loginModal').style.display = 'none';
+          document.getElementById('dashboardScreen').style.display = 'none';
+          document.getElementById('tlScreen').style.display = 'block';
+          document.getElementById('tlGroupLabel').textContent = 'Group: ' + r.groupName;
+          loadTLInterns();
+        } else { err.textContent = 'Invalid email or password'; }
+      })
+      .withFailureHandler(function(e) { hideSpinner(); err.textContent = 'Error: ' + e; })
+      .verifyTLLogin(email, pass);
+  }
+
+  function tlLogout() {
+    tlGroup = '';
+    tlInterns = [];
+    document.getElementById('tlScreen').style.display = 'none';
+    document.getElementById('loginModal').style.display = 'flex';
+  }
+
+  function loadTLInterns() {
+    showSpinner('Loading interns…');
+    google.script.run
+      .withSuccessHandler(function(rows) {
+        hideSpinner();
+        tlInterns = rows || [];
+        renderTLBody();
+      })
+      .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
+      .fetchTLInterns(tlGroup);
+  }
+
+  function renderTLBody() {
+    var body = document.getElementById('tlBody');
+    var q = (document.getElementById('tlSearch').value || '').toLowerCase();
+    var rows = (tlInterns || []).filter(function(r) {
+      if (!q) return true;
+      return [_tk(r, ['InternCode','Intern Code','internCode']), _tk(r, ['Name','name']),
+              _tk(r, ['EmailID','Email ID','emailId']), _tk(r, ['DomainName','Domain Name','domainName']),
+              _tk(r, ['CurrentStatus','Current Status','currentStatus'])]
+        .join(' ').toLowerCase().indexOf(q) !== -1;
+    });
+    document.getElementById('tlCount').textContent = (tlInterns || []).length;
+    if (!rows.length) {
+      body.innerHTML = '';
+      document.getElementById('tlEmpty').style.display = 'block';
+      return;
+    }
+    document.getElementById('tlEmpty').style.display = 'none';
+    var h = '';
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      h += '<tr>'
+        + '<td>' + esc(_tk(r, ['InternCode','Intern Code','internCode']) || '-') + '</td>'
+        + '<td>' + esc(_tk(r, ['Name','name']) || '-') + '</td>'
+        + '<td>' + esc(_tk(r, ['EmailID','Email ID','emailId']) || '-') + '</td>'
+        + '<td>' + esc(_tk(r, ['DomainName','Domain Name','domainName']) || '-') + '</td>'
+        + '<td class="cell-date">' + esc(fmtDate(_tk(r, ['StartDate','Start Date','startDate']))) + '</td>'
+        + '<td class="cell-date">' + esc(fmtDate(_tk(r, ['EndDate','End Date','endDate']))) + '</td>'
+        + '<td>' + esc(_tk(r, ['CurrentStatus','Current Status','currentStatus']) || '-') + '</td>'
+        + '<td class="action-col"><button class="btn btn-sm btn-blue" onclick="openTLStatus(' + r.rowNumber + ')">Change Current Status</button></td>'
+        + '</tr>';
+    }
+    body.innerHTML = h;
+  }
+
+  function tlFilter() { renderTLBody(); }
+
+  function _tk(r, list) {
+    for (var i = 0; i < list.length; i++) { if (r[list[i]] !== undefined && r[list[i]] !== '') return r[list[i]]; }
+    return '';
+  }
+
+  function openTLStatus(rn) {
+    var r = null;
+    for (var i = 0; i < tlInterns.length; i++) { if (tlInterns[i].rowNumber == rn) { r = tlInterns[i]; break; } }
+    if (!r) return;
+    tlStatusRow = rn;
+    var nm = _tk(r, ['Name', 'name']) || 'Intern';
+    var code = _tk(r, ['InternCode', 'Intern Code', 'internCode']);
+    document.getElementById('tlStatusSub').textContent = nm + (code ? ' — ' + code : '');
+    document.getElementById('tlNewStatus').value = _tk(r, ['CurrentStatus', 'Current Status', 'currentStatus']) || 'Active';
+    openModal('tlStatusModal');
+  }
+
+  function tlSaveStatus() {
+    var status = document.getElementById('tlNewStatus').value;
+    showSpinner('Updating…');
+    google.script.run
+      .withSuccessHandler(function(res) {
+        hideSpinner();
+        closeModal('tlStatusModal');
+        if (res && res.success) { toast('Status updated', 'green'); loadTLInterns(); }
+        else { toast('Error: ' + ((res && res.error) || 'Failed'), 'red'); }
+      })
+      .withFailureHandler(function(e) { hideSpinner(); closeModal('tlStatusModal'); toast('Error: ' + e, 'red'); })
+      .updateInternFullRecord(tlStatusRow, { CurrentStatus: status });
+  }
+</script>
+</body>
+</html>
