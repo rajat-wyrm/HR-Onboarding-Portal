@@ -328,6 +328,9 @@ function getActiveDomains() {
 }
 
 function handleInternRegistration(formData, pdfFileData) {
+  if (!getRegistrationStatus().enabled) {
+    return { success: false, error: "Registration is currently closed by the HR team." };
+  }
   try { ensureSheetsExist(); } catch (e) {
     return { success: false, error: "ensureSheetsExist failed: " + e.toString() };
   }
@@ -770,6 +773,7 @@ function srTlRowHtml(rowData, tz) {
   var name = valAt(rowData, masterSheet, "Name") || "";
   var email = valAt(rowData, masterSheet, "Email ID") || "";
   var mobile = valAt(rowData, masterSheet, "Mobile No.") || "";
+  var whatsapp = valAt(rowData, masterSheet, "Whatsapp No.") || "";
   var domain = valAt(rowData, masterSheet, "Domain Name") || "";
   var start = fmtDate(valAt(rowData, masterSheet, "Start Date") || "");
   var end = fmtDate(valAt(rowData, masterSheet, "End Date") || "");
@@ -779,6 +783,7 @@ function srTlRowHtml(rowData, tz) {
     + '<td style="padding:10px; border-bottom:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">' + escapeHtml(name) + "</td>"
     + '<td style="padding:10px; border-bottom:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">' + escapeHtml(email) + "</td>"
     + '<td style="padding:10px; border-bottom:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">' + escapeHtml(mobile) + "</td>"
+    + '<td style="padding:10px; border-bottom:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">' + escapeHtml(whatsapp) + "</td>"
     + '<td style="padding:10px; border-bottom:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">' + escapeHtml(domain) + "</td>"
     + '<td style="padding:10px; border-bottom:1px solid #e2e8f0; border-right:1px solid #e2e8f0;">' + escapeHtml(start) + "</td>"
     + '<td style="padding:10px; border-bottom:1px solid #e2e8f0;">' + escapeHtml(end) + "</td>"
