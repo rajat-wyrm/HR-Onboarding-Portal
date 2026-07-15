@@ -1138,9 +1138,10 @@
         <button class="btn btn-sm btn-red" onclick="tlLogout()">Logout</button>
       </div>
     </div>
+    <div class="stats-grid" id="tlStatsGrid"></div>
     <div class="card">
       <div class="card-header">
-        <div class="card-title">Assigned Interns <span id="tlCount" class="badge badge-blue" style="font-size:11px"></span></div>
+        <div class="card-title">Intern Details <span id="tlCount" class="badge badge-blue" style="font-size:11px"></span></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <input type="text" id="tlSearch" placeholder="Search interns..." onkeyup="tlFilter()" style="width:220px">
         </div>
@@ -1148,10 +1149,7 @@
       <div class="card-body">
         <div class="table-wrap">
           <table>
-            <thead><tr>
-              <th>Intern Code</th><th>Name</th><th>Email ID</th><th>Domain Name</th>
-              <th>Start Date</th><th>End Date</th><th>Current Status</th><th class="action-col">Action</th>
-            </tr></thead>
+            <thead id="tlHead"></thead>
             <tbody id="tlBody"></tbody>
           </table>
         </div>
@@ -1351,7 +1349,7 @@
               <div class="table-wrap">
                 <table>
                   <thead><tr>
-                    <th>Domain Name</th><th>Project Group Name</th><th class="action-col">Action</th>
+                    <th>Project Group Name</th><th class="action-col">Action</th>
                   </tr></thead>
                   <tbody id="programGroupBody"></tbody>
                 </table>
@@ -1420,7 +1418,7 @@
   var filteredRecords = [], currentPage = 1, pageSize = 15;
   var pendingConfirm = null, currentHeaders = [], currentHeaderKeys = [];
   var currentProgram = [], currentProject = [];
-  var tlGroup = '', tlInterns = [], tlStatusRow = 0;
+  var tlGroup = '', tlInterns = [], tlHeaderKeys = [], tlHeaders = [], tlFiltered = [], tlStatusRow = 0;
   var lastFormData = null, lastResultData = null, editingRowNum = null;
   var colFilters = {}, selectedRowsObj = {}, projectNames = [];
   var groupCache = {};
@@ -2551,8 +2549,6 @@
       h += '<td class="action-col"><div class="action-group">' +
         '<button class="btn btn-accent btn-xs" onclick="openEdit('+rn+')" title="Edit">Edit</button>' +
         '<button class="btn btn-green btn-xs" onclick="confirmGenCode('+rn+')" title="Generate Code">Code</button>' +
-        '<button class="btn btn-orange btn-xs" onclick="confirmMail('+rn+')" title="Send Emails">Mail</button>' +
-        '<button class="btn btn-teal btn-xs" onclick="confirmTLMail('+rn+')" title="Send TL Email">TL</button>' +
         '<button class="btn btn-red btn-xs" onclick="confirmDelete('+rn+')" title="Delete">Del</button>' +
         '</div></td></tr>';
     }
@@ -2827,13 +2823,12 @@
     }
     if (gb) {
       if (!currentProgram || currentProgram.length === 0) {
-        gb.innerHTML = '<tr><td colspan="3"><div class="empty-state" style="padding:30px"><div class="empty-title">No project groups added</div></div></td></tr>';
+        gb.innerHTML = '<tr><td colspan="2"><div class="empty-state" style="padding:30px"><div class="empty-title">No project groups added</div></div></td></tr>';
       } else {
         var gh = '';
         for (var j = 0; j < currentProgram.length; j++) {
           var rr = currentProgram[j];
-          gh += '<tr class="row-enter" style="animation-delay:'+(j*45)+'ms"><td>'+esc(rr.domainName||'')+'</td>'+
-            '<td><strong>'+esc(rr.groupName||'')+'</strong></td>'+
+          gh += '<tr class="row-enter" style="animation-delay:'+(j*45)+'ms"><td><strong>'+esc(rr.groupName||'')+'</strong></td>'+
             '<td><button class="btn btn-blue btn-xs" onclick="editProgramEntry('+(rr.rowNumber)+')">Edit</button> '+
             '<button class="btn btn-red btn-xs" onclick="confirmDeleteProgram('+(rr.rowNumber)+')">Delete</button></td></tr>';
         }
@@ -3306,7 +3301,7 @@
     google.script.run
       .withSuccessHandler(function(r) {
         hideSpinner();
-        if (r && r.ok) {
+        if (r && r.success) {
           tlGroup = r.groupName;
           closeModal('tlLoginModal');
           document.getElementById('loginModal').style.display = 'none';
@@ -3330,50 +3325,107 @@
   function loadTLInterns() {
     showSpinner('Loading interns…');
     google.script.run
-      .withSuccessHandler(function(rows) {
+      .withSuccessHandler(function(r) {
         hideSpinner();
-        tlInterns = rows || [];
-        renderTLBody();
+        if (r && r.data) { tlInterns = r.data; tlHeaders = r.headers || []; tlHeaderKeys = r.headerKeys || []; }
+        else if (Array.isArray(r)) { tlInterns = r; }
+        else { tlInterns = []; }
+        tlFiltered = tlInterns.slice();
+        buildTLStats();
+        renderTLTable();
       })
       .withFailureHandler(function(e) { hideSpinner(); toast('Error: ' + e, 'red'); })
       .fetchTLInterns(tlGroup);
   }
 
-  function renderTLBody() {
+  function buildTLStats() {
+    var grid = document.getElementById('tlStatsGrid');
+    if (!grid) return;
+    var recs = tlInterns || [];
+    var total = recs.length;
+    var active = 0, pending = 0, completed = 0, terminated = 0, resigned = 0, vPass = 0, vFail = 0, validated = 0;
+    for (var i = 0; i < recs.length; i++) {
+      var s = (_tk(recs[i], ['CurrentStatus','Current Status','currentStatus']) || '').toString().toLowerCase();
+      if (s === 'active') active++;
+      else if (s === 'pending verification' || s === 'pending') pending++;
+      else if (s === 'completed') completed++;
+      else if (s === 'terminated') terminated++;
+      else if (s === 'resigned') resigned++;
+      var v = (_tk(recs[i], ['ValidationStatus','Validation Status','validationStatus']) || '').toString().toLowerCase();
+      if (v === 'passed') { vPass++; validated++; }
+      else if (v === 'failed') { vFail++; validated++; }
+    }
+    var cards = [
+      { l:'Total Interns', n:total, c:'var(--accent)', ic:'users', t:'' },
+      { l:'Active', n:active, c:'var(--green)', ic:'active', t:pct(active,total)+'% of total' },
+      { l:'Pending Verification', n:pending, c:'var(--orange)', ic:'pending', t:pct(pending,total)+' awaiting' },
+      { l:'Completed', n:completed, c:'var(--teal)', ic:'done', t:pct(completed,total)+' done' },
+      { l:'Terminated', n:terminated, c:'var(--red)', ic:'term', t:pct(terminated,total)+' left' },
+      { l:'Resigned', n:resigned, c:'#64748b', ic:'resign', t:pct(resigned,total)+' resigned' },
+      { l:'Validation Passed', n:vPass, c:'var(--green)', ic:'pass', t:pct(vPass,validated)+' of checked' },
+      { l:'Validation Failed', n:vFail, c:'var(--red)', ic:'fail', t:pct(vFail,validated)+' need fix' }
+    ];
+    grid.innerHTML = '';
+    for (var ci = 0; ci < cards.length; ci++) {
+      var cd = cards[ci];
+      var el = document.createElement('div');
+      el.className = 'stat-card';
+      el.innerHTML =
+        '<div class="stat-bar" style="background:linear-gradient(90deg,'+cd.c+','+hexA(cd.c,0.2)+')"></div>' +
+        '<div class="stat-accent" style="background:'+cd.c+';box-shadow:0 0 24px '+cd.c+'"></div>' +
+        '<div class="stat-icon" style="color:'+cd.c+';background:'+hexA(cd.c,0.12)+';border-color:'+hexA(cd.c,0.3)+'"><svg viewBox="0 0 24 24">'+ICONS[cd.ic]+'</svg></div>' +
+        '<div class="stat-num" data-count="'+cd.n+'">0</div>' +
+        '<div class="stat-label">'+cd.l+'</div>' +
+        '<div class="stat-trend '+(cd.t.indexOf('down')!==-1?'down':(cd.t.indexOf('up')!==-1?'up':''))+'">'+cd.t+'</div>';
+      grid.appendChild(el);
+      attachTilt(el);
+    }
+    var nums = grid.querySelectorAll('.stat-num');
+    for (var ni = 0; ni < nums.length; ni++) countUp(nums[ni], parseInt(nums[ni].getAttribute('data-count'), 10) || 0);
+  }
+
+  function renderTLTable() {
     var body = document.getElementById('tlBody');
+    var head = document.getElementById('tlHead');
+    if (!head) return;
     var q = (document.getElementById('tlSearch').value || '').toLowerCase();
-    var rows = (tlInterns || []).filter(function(r) {
+    tlFiltered = (tlInterns || []).filter(function(r) {
       if (!q) return true;
-      return [_tk(r, ['InternCode','Intern Code','internCode']), _tk(r, ['Name','name']),
-              _tk(r, ['EmailID','Email ID','emailId']), _tk(r, ['DomainName','Domain Name','domainName']),
-              _tk(r, ['CurrentStatus','Current Status','currentStatus'])]
-        .join(' ').toLowerCase().indexOf(q) !== -1;
+      return (tlHeaderKeys || []).some(function(k) { return String(r[k] || '').toLowerCase().indexOf(q) !== -1; });
     });
     document.getElementById('tlCount').textContent = (tlInterns || []).length;
-    if (!rows.length) {
+    var hh = '';
+    for (var i = 0; i < (tlHeaders || []).length; i++) {
+      hh += '<th><div class="col-header"><span>' + esc(tlHeaders[i]) + '</span></div></th>';
+    }
+    hh += '<th class="action-col" style="min-width:140px">Action</th>';
+    head.innerHTML = hh;
+    if (!tlFiltered.length) {
       body.innerHTML = '';
       document.getElementById('tlEmpty').style.display = 'block';
       return;
     }
     document.getElementById('tlEmpty').style.display = 'none';
     var h = '';
-    for (var i = 0; i < rows.length; i++) {
-      var r = rows[i];
-      h += '<tr>'
-        + '<td>' + esc(_tk(r, ['InternCode','Intern Code','internCode']) || '-') + '</td>'
-        + '<td>' + esc(_tk(r, ['Name','name']) || '-') + '</td>'
-        + '<td>' + esc(_tk(r, ['EmailID','Email ID','emailId']) || '-') + '</td>'
-        + '<td>' + esc(_tk(r, ['DomainName','Domain Name','domainName']) || '-') + '</td>'
-        + '<td class="cell-date">' + esc(fmtDate(_tk(r, ['StartDate','Start Date','startDate']))) + '</td>'
-        + '<td class="cell-date">' + esc(fmtDate(_tk(r, ['EndDate','End Date','endDate']))) + '</td>'
-        + '<td>' + esc(_tk(r, ['CurrentStatus','Current Status','currentStatus']) || '-') + '</td>'
-        + '<td class="action-col"><button class="btn btn-sm btn-blue" onclick="openTLStatus(' + r.rowNumber + ')">Change Current Status</button></td>'
-        + '</tr>';
+    for (var j = 0; j < tlFiltered.length; j++) {
+      var r = tlFiltered[j];
+      var rn = r.rowNumber;
+      h += '<tr>';
+      for (var ki = 0; ki < (tlHeaderKeys || []).length; ki++) {
+        var key = tlHeaderKeys[ki];
+        var val = r[key] !== undefined ? r[key] : '';
+        var disp = esc(val);
+        if (key === 'OnboardingDate' || key === 'StartDate' || key === 'EndDate') disp = esc(fmtDate(val));
+        var cellCls = 'cell-text';
+        if (key === 'OnboardingDate') cellCls = 'cell-date';
+        h += '<td class="' + cellCls + '" style="font-size:12px;white-space:normal;word-break:break-word;vertical-align:top" title="' + disp + '">' + disp + '</td>';
+      }
+      h += '<td class="action-col"><button class="btn btn-sm btn-blue" onclick="openTLStatus(' + rn + ')">Change Current Status</button></td></tr>';
     }
     body.innerHTML = h;
   }
 
-  function tlFilter() { renderTLBody(); }
+  function tlFilter() { renderTLTable(); }
 
   function _tk(r, list) {
     for (var i = 0; i < list.length; i++) { if (r[list[i]] !== undefined && r[list[i]] !== '') return r[list[i]]; }
