@@ -821,6 +821,7 @@
             <span id="themeLabel">Light</span>
           </button>
           <button class="btn-hero" onclick="showLogin()">HR Admin Login</button>
+          <button class="btn-hero btn-hero-accent" onclick="openTLLogin()">Team Lead Login</button>
         </div>
       </div>
     </div>
@@ -1167,11 +1168,14 @@
       <label>Current Status</label>
       <select id="tlNewStatus">
         <option value="Active">Active</option>
-        <option value="Pending Verification">Pending Verification</option>
         <option value="Completed">Completed</option>
         <option value="Terminated">Terminated</option>
         <option value="Resigned">Resigned</option>
       </select>
+    </div>
+    <div class="form-group">
+      <label>Remark</label>
+      <textarea id="tlRemark" rows="3" placeholder="Add a remark (optional)"></textarea>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('tlStatusModal')">Cancel</button>
@@ -2046,6 +2050,7 @@
   }
 
   function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  function openModal(id) { var el = document.getElementById(id); if (el) el.classList.add('open'); }
 
   function hrLogin() {
     var uid = document.getElementById('hrUserId').value.trim();
@@ -3456,11 +3461,13 @@
     var code = _tk(r, ['InternCode', 'Intern Code', 'internCode']);
     document.getElementById('tlStatusSub').textContent = nm + (code ? ' — ' + code : '');
     document.getElementById('tlNewStatus').value = _tk(r, ['CurrentStatus', 'Current Status', 'currentStatus']) || 'Active';
+    document.getElementById('tlRemark').value = _tk(r, ['StatusReason', 'Status Reason', 'statusReason']) || '';
     openModal('tlStatusModal');
   }
 
   function tlSaveStatus() {
     var status = document.getElementById('tlNewStatus').value;
+    var remark = document.getElementById('tlRemark').value.trim();
     showSpinner('Updating…');
     google.script.run
       .withSuccessHandler(function(res) {
@@ -3470,7 +3477,7 @@
         else { toast('Error: ' + ((res && res.error) || 'Failed'), 'red'); }
       })
       .withFailureHandler(function(e) { hideSpinner(); closeModal('tlStatusModal'); toast('Error: ' + e, 'red'); })
-      .updateInternFullRecord(tlStatusRow, { CurrentStatus: status });
+      .updateInternFullRecord(tlStatusRow, { CurrentStatus: status, StatusReason: remark });
   }
 </script>
 </body>
