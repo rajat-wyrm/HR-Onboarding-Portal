@@ -299,7 +299,10 @@ function fetchTLInterns(groupName) {
     for (var i = 0; i < base.data.length; i++) {
       var r = base.data[i];
       var ag = ((r['Assigned Group Name'] || r['AssignedGroupName'] || '') + '').toString().trim().toLowerCase();
-      if (ag === g) filtered.push(r);
+      if (ag !== g) continue;
+      var st = ((r['Current Status'] || '') + '').toString().trim().toLowerCase();
+      if (st === 'pending verification' || st === 'pending' || st === '') continue;
+      filtered.push(r);
     }
     return { success: true, data: filtered, headers: base.headers, headerKeys: base.headerKeys, count: filtered.length, groupName: groupName };
   } catch (e) {
