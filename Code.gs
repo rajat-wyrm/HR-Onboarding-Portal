@@ -4,6 +4,7 @@ var PROGRAM_SHEET = "Program Details";
 var DRIVE_FOLDER_ID = "1Gj-y3-im1z6r8EChMhOG3uLffxRYkfJY";
 var HR_USERID = "admin";
 var HR_PASSKEY = "admin";
+var API_TOKEN = "hrtn_2026_x";
 
 var CONFIG = {
   ORGANIZATION_NAME: "UptoSkills",
@@ -53,12 +54,13 @@ function ensureSheetsExist() {
       "Domain Name", "Start Date", "End Date", "Current Address", "Permanent Address",
       "Validation Status", "Validation Reason", "Assigned Group Name",
       "Intern Mail Sent", "Intern Mail Timestamp", "TL Mail Sent", "TL Mail Timestamp",
-      "Current Status", "Status Reason", "Offer Letter Link"
+      "Current Status", "Status Reason", "Offer Letter Link", "TL Status Locked"
     ];
     master.getRange(1, 1, 1, masterHeaders.length).setValues([masterHeaders]);
     master.setFrozenRows(1);
   } else {
     ensureMasterColumn(master, "Offer Letter Link");
+    ensureMasterColumn(master, "TL Status Locked");
   }
   var proj = ss.getSheetByName(PROJECT_SHEET);
   if (!proj) {
@@ -213,6 +215,9 @@ function doPost(e) {
       for (var k = 0; k < keys.length; k++) {
         if (payload[keys[k]] === undefined) payload[keys[k]] = e.parameter[keys[k]];
       }
+    }
+    if (payload.__token !== undefined && payload.__token !== API_TOKEN) {
+      return jsonResponse({ success: false, error: 'Unauthorized: invalid token' });
     }
     var action = payload.action || (e.parameter ? e.parameter.action : null);
     var result;
