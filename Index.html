@@ -1536,19 +1536,22 @@
     .catch(function(err){ if (failureCb) failureCb(err.toString()); });
   }
 
-  function _makeRunner() {
-    var state = { success: null, failure: null };
+  var _gsState = { success: null, failure: null };
+  function makeGsRunProxy() {
     var handler = {
       get: function(t, prop) {
-        if (prop === 'withSuccessHandler') return function(fn){ state.success = fn; return proxy; };
-        if (prop === 'withFailureHandler') return function(fn){ state.failure = fn; return proxy; };
-        return function(){ _gsExecute(prop, Array.prototype.slice.call(arguments), state.success, state.failure); return proxy; };
+        if (prop === 'withSuccessHandler') return function(fn){ _gsState.success = fn; return proxy; };
+        if (prop === 'withFailureHandler') return function(fn){ _gsState.failure = fn; return proxy; };
+        return function(){
+          _gsExecute(prop, Array.prototype.slice.call(arguments), _gsState.success, _gsState.failure);
+          return proxy;
+        };
       }
     };
     var proxy = new Proxy({}, handler);
     return proxy;
   }
-  var google = { script: { run: new Proxy({}, { get: function(){ return _makeRunner(); } }) } };
+  var google = { script: { run: makeGsRunProxy() } };
 
   var currentRecords = [], currentConfig = [], selectedFile = null, refreshTimer = null;
   var allDomains = [], currentProgram = [], currentProject = [];
