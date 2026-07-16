@@ -557,6 +557,61 @@
       .modal-content { width:100%; }
       td, th { padding:8px 10px; }
       .dash-header { padding:12px 16px; }
+      .stats-grid { grid-template-columns:repeat(2,1fr) !important; }
+      .tl-stats-grid { grid-template-columns:repeat(2,1fr) !important; }
+      .action-group { display:flex; flex-direction:column; gap:6px; }
+      .action-group .btn { width:100%; }
+      .btn-hero { display:block; width:100%; margin:6px 0 0 0 !important; }
+      .hero-right { display:flex; flex-direction:column; width:100%; }
+      .dash-actions { display:flex; flex-direction:column; gap:6px; align-items:stretch; }
+      .dash-actions .btn { width:100%; }
+      .card-header > div:last-child { width:100%; }
+      .card-header input, .card-header select { width:100% !important; }
+    }
+
+    /* ---- Mobile: convert data tables into stacked card rows ---- */
+    @media (max-width:600px) {
+      .table-wrap { overflow:visible; border:none; }
+      .table-wrap table, .table-wrap thead, .table-wrap tbody, .table-wrap tr, .table-wrap th, .table-wrap td { display:block; width:100%; }
+      .table-wrap thead { display:none; }
+      .table-wrap tbody tr {
+        border:1px solid var(--border-light);
+        border-radius:var(--radius);
+        margin-bottom:14px;
+        padding:6px 14px 10px;
+        background:var(--bg-card);
+        box-shadow:var(--shadow-sm);
+        position:relative;
+      }
+      .table-wrap td {
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:14px;
+        text-align:right;
+        padding:9px 0;
+        border-bottom:1px dashed var(--border-light);
+        white-space:normal !important;
+        word-break:break-word;
+      }
+      .table-wrap td:last-child { border-bottom:none; }
+      .table-wrap td[data-label]::before {
+        content:attr(data-label);
+        font-weight:700;
+        color:var(--text-secondary);
+        text-align:left;
+        flex:0 0 42%;
+        font-size:12px;
+      }
+      .table-wrap td.action-col {
+        justify-content:stretch;
+        background:transparent !important;
+        box-shadow:none;
+        position:static;
+      }
+      .table-wrap td.action-col .action-group { flex-direction:row; flex-wrap:wrap; width:100%; }
+      .table-wrap td.action-col .action-group .btn { flex:1 1 auto; width:auto; }
+      .table-wrap td .check-all, .table-wrap td .row-check { align-self:center; }
     }
     .bulk-bar { display:none; align-items:center; gap:10px; padding:8px 0; flex-wrap:wrap; }
     .bulk-bar .sel-info { font-size:13px; color:var(--text-secondary); flex:1; }
@@ -1145,6 +1200,7 @@
         <div class="card-title">Intern Details <span id="tlCount" class="badge badge-blue" style="font-size:11px"></span></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <input type="text" id="tlSearch" placeholder="Search interns..." onkeyup="tlFilter()" style="width:220px">
+          <button class="btn btn-sm btn-accent" onclick="loadTLInterns()">↻ Refresh</button>
         </div>
       </div>
       <div class="card-body">
@@ -1423,6 +1479,19 @@
   var pendingConfirm = null, currentHeaders = [], currentHeaderKeys = [];
   var currentProgram = [], currentProject = [];
   var tlGroup = '', tlInterns = [], tlHeaderKeys = [], tlHeaders = [], tlFiltered = [], tlStatusRow = 0;
+  var TL_COLS = [
+    { key: 'InternCode', label: 'Intern Code' },
+    { key: 'OnboardingDate', label: 'Onboarding Date' },
+    { key: 'Name', label: 'Name' },
+    { key: 'EmailID', label: 'Email ID' },
+    { key: 'MobileNo', label: 'Mobile No' },
+    { key: 'WhatsappNo', label: 'WhatsApp No' },
+    { key: 'DomainName', label: 'Domain Name' },
+    { key: 'StartDate', label: 'Start Date' },
+    { key: 'EndDate', label: 'End Date' },
+    { key: 'CurrentStatus', label: 'Current Status' },
+    { key: 'StatusReason', label: 'Status Reason' }
+  ];
   var lastFormData = null, lastResultData = null, editingRowNum = null;
   var colFilters = {}, selectedRowsObj = {}, projectNames = [];
   var groupCache = {};
@@ -2519,43 +2588,44 @@
       var r = pageData[i];
       var rn = r.rowNumber;
       var checked = selectedRowsObj[rn] ? 'checked' : '';
-      h += '<tr><td><input type="checkbox" class="row-check" ' + checked + ' onchange="toggleRowCheck('+rn+',this)"></td>';
-      for (var ki = 0; ki < currentHeaderKeys.length; ki++) {
-        var key = currentHeaderKeys[ki];
-        var val = r[key] !== undefined ? r[key] : '';
-        var disp = esc(val);
-        if (key === 'OnboardingDate' || key === 'StartDate' || key === 'EndDate') disp = esc(fmtDate(val));
-        if (key === 'InternCode' && val) {
-          h += '<td><span class="badge badge-accent" style="font-family:var(--mono);font-size:11px">' + disp + '</span></td>';
-        } else if (key === 'CurrentStatus') {
-          var sv = val.toString();
-          var pillCls = 'pill-orange';
-          if (sv === 'Active' || sv === 'Passed') pillCls = 'pill-green';
-          else if (sv === 'Completed') pillCls = 'pill-accent';
-          else if (sv === 'Terminated' || sv === 'Failed') pillCls = 'pill-red';
-          var dotCls = sv === 'Active' || sv === 'Passed' ? 'green' : sv === 'Completed' ? 'accent' : sv === 'Terminated' || sv === 'Failed' ? 'red' : 'orange';
-          h += '<td><span class="status-pill ' + pillCls + '"><span class="pill-dot ' + dotCls + '"></span>' + esc(sv) + '</span></td>';
-        } else if (key === 'InternMailSent' || key === 'TLMailSent') {
-          h += '<td>' + (val === 'Yes' ? '<span class="tick-yes" title="Sent">&#10003;</span>' : '<span class="tick-no" title="Not sent">&#10007;</span>') + '</td>';
-        } else if (key === 'DomainName' && val) {
-          h += '<td><span class="badge badge-accent" style="font-size:11px">' + disp + '</span></td>';
-        } else if (key === 'Name' && val) {
-          h += '<td><strong>' + disp + '</strong></td>';
-        } else if (key === 'OfferLetterLink' && val) {
-          h += '<td><a href="' + disp + '" target="_blank" rel="noopener" class="btn btn-ghost btn-xs" style="text-decoration:none">View PDF</a></td>';
-        } else {
-          var cellCls = 'cell-text';
-          var cellStyle = 'font-size:12px;white-space:normal;word-break:break-word;vertical-align:top';
-          if (key === 'MobileNo' || key === 'WhatsappNo') { cellCls = 'cell-mono'; }
-          else if (key === 'OnboardingDate') { cellCls = 'cell-date'; }
-          h += '<td style="' + cellStyle + '" class="' + cellCls + '" title="' + disp + '">' + disp + '</td>';
-        }
-      }
-      h += '<td class="action-col"><div class="action-group">' +
-        '<button class="btn btn-accent btn-xs" onclick="openEdit('+rn+')" title="Edit">Edit</button>' +
-        '<button class="btn btn-green btn-xs" onclick="confirmGenCode('+rn+')" title="Generate Code">Code</button>' +
-        '<button class="btn btn-red btn-xs" onclick="confirmDelete('+rn+')" title="Delete">Del</button>' +
-        '</div></td></tr>';
+       h += '<tr><td data-label="Select"><input type="checkbox" class="row-check" ' + checked + ' onchange="toggleRowCheck('+rn+',this)"></td>';
+       for (var ki = 0; ki < currentHeaderKeys.length; ki++) {
+         var key = currentHeaderKeys[ki];
+         var lbl = esc(currentHeaders[ki]);
+         var val = r[key] !== undefined ? r[key] : '';
+         var disp = esc(val);
+         if (key === 'OnboardingDate' || key === 'StartDate' || key === 'EndDate') disp = esc(fmtDate(val));
+         if (key === 'InternCode' && val) {
+           h += '<td data-label="' + lbl + '"><span class="badge badge-accent" style="font-family:var(--mono);font-size:11px">' + disp + '</span></td>';
+         } else if (key === 'CurrentStatus') {
+           var sv = val.toString();
+           var pillCls = 'pill-orange';
+           if (sv === 'Active' || sv === 'Passed') pillCls = 'pill-green';
+           else if (sv === 'Completed') pillCls = 'pill-accent';
+           else if (sv === 'Terminated' || sv === 'Failed') pillCls = 'pill-red';
+           var dotCls = sv === 'Active' || sv === 'Passed' ? 'green' : sv === 'Completed' ? 'accent' : sv === 'Terminated' || sv === 'Failed' ? 'red' : 'orange';
+           h += '<td data-label="' + lbl + '"><span class="status-pill ' + pillCls + '"><span class="pill-dot ' + dotCls + '"></span>' + esc(sv) + '</span></td>';
+         } else if (key === 'InternMailSent' || key === 'TLMailSent') {
+           h += '<td data-label="' + lbl + '">' + (val === 'Yes' ? '<span class="tick-yes" title="Sent">&#10003;</span>' : '<span class="tick-no" title="Not sent">&#10007;</span>') + '</td>';
+         } else if (key === 'DomainName' && val) {
+           h += '<td data-label="' + lbl + '"><span class="badge badge-accent" style="font-size:11px">' + disp + '</span></td>';
+         } else if (key === 'Name' && val) {
+           h += '<td data-label="' + lbl + '"><strong>' + disp + '</strong></td>';
+         } else if (key === 'OfferLetterLink' && val) {
+           h += '<td data-label="' + lbl + '"><a href="' + disp + '" target="_blank" rel="noopener" class="btn btn-ghost btn-xs" style="text-decoration:none">View PDF</a></td>';
+         } else {
+           var cellCls = 'cell-text';
+           var cellStyle = 'font-size:12px;white-space:normal;word-break:break-word;vertical-align:top';
+           if (key === 'MobileNo' || key === 'WhatsappNo') { cellCls = 'cell-mono'; }
+           else if (key === 'OnboardingDate') { cellCls = 'cell-date'; }
+           h += '<td data-label="' + lbl + '" style="' + cellStyle + '" class="' + cellCls + '" title="' + disp + '">' + disp + '</td>';
+         }
+       }
+       h += '<td class="action-col"><div class="action-group">' +
+         '<button class="btn btn-accent btn-xs" onclick="openEdit('+rn+')" title="Edit">Edit</button>' +
+         '<button class="btn btn-green btn-xs" onclick="confirmGenCode('+rn+')" title="Generate Code">Code</button>' +
+         '<button class="btn btn-red btn-xs" onclick="confirmDelete('+rn+')" title="Delete">Del</button>' +
+         '</div></td></tr>';
     }
     tb.innerHTML = h;
   }
@@ -2819,8 +2889,8 @@
         var dh = '';
         for (var i = 0; i < currentProgram.length; i++) {
           var r = currentProgram[i];
-          dh += '<tr class="row-enter" style="animation-delay:'+(i*45)+'ms"><td>'+esc(r.domainName||'')+'</td>'+
-            '<td><button class="btn btn-blue btn-xs" onclick="editProgramDomain('+(r.rowNumber)+')">Edit</button> '+
+          dh += '<tr class="row-enter" style="animation-delay:'+(i*45)+'ms"><td data-label="Domain Name">'+esc(r.domainName||'')+'</td>'+
+            '<td class="action-col"><button class="btn btn-blue btn-xs" onclick="editProgramDomain('+(r.rowNumber)+')">Edit</button> '+
             '<button class="btn btn-red btn-xs" onclick="confirmDeleteProgram('+(r.rowNumber)+')">Delete</button></td></tr>';
         }
         db.innerHTML = dh;
@@ -2833,8 +2903,8 @@
         var gh = '';
         for (var j = 0; j < currentProgram.length; j++) {
           var rr = currentProgram[j];
-          gh += '<tr class="row-enter" style="animation-delay:'+(j*45)+'ms"><td><strong>'+esc(rr.groupName||'')+'</strong></td>'+
-            '<td><button class="btn btn-blue btn-xs" onclick="editProgramEntry('+(rr.rowNumber)+')">Edit</button> '+
+          gh += '<tr class="row-enter" style="animation-delay:'+(j*45)+'ms"><td data-label="Project Group Name"><strong>'+esc(rr.groupName||'')+'</strong></td>'+
+            '<td class="action-col"><button class="btn btn-blue btn-xs" onclick="editProgramEntry('+(rr.rowNumber)+')">Edit</button> '+
             '<button class="btn btn-red btn-xs" onclick="confirmDeleteProgram('+(rr.rowNumber)+')">Delete</button></td></tr>';
         }
         gb.innerHTML = gh;
@@ -3182,10 +3252,10 @@
     var h = '';
     for (var pdi = 0; pdi < currentProject.length; pdi++) {
       var pr = currentProject[pdi];
-      h += '<tr class="row-enter" style="animation-delay:'+(pdi*45)+'ms"><td><strong>' + esc(pr.groupName || '') + '</strong></td>' +
-        '<td style="font-size:12px">' + esc(pr.emailId || '') + '</td>' +
-        '<td style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis" class="truncate">' + esc(pr.whatsappLink || '') + '</td>' +
-        '<td><span class="badge badge-blue">' + esc(pr.domainName || '') + '</span></td>' +
+      h += '<tr class="row-enter" style="animation-delay:'+(pdi*45)+'ms"><td data-label="Group Name"><strong>' + esc(pr.groupName || '') + '</strong></td>' +
+        '<td data-label="Email ID" style="font-size:12px">' + esc(pr.emailId || '') + '</td>' +
+        '<td data-label="WhatsApp Link" style="font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis" class="truncate">' + esc(pr.whatsappLink || '') + '</td>' +
+        '<td data-label="Domain Name"><span class="badge badge-blue">' + esc(pr.domainName || '') + '</span></td>' +
         '<td class="action-col"><button class="btn btn-blue btn-xs" onclick="editProjectEntry(' + (pr.rowNumber) + ')">Edit</button> ' +
         '<button class="btn btn-red btn-xs" onclick="deleteProjectEntry(' + (pr.rowNumber) + ')">Del</button></td></tr>';
     }
@@ -3404,6 +3474,19 @@
     for (var ni = 0; ni < nums.length; ni++) countUp(nums[ni], parseInt(nums[ni].getAttribute('data-count'), 10) || 0);
   }
 
+  function tlVal(r, key) {
+    var variants = [key, key.replace(/([a-z])([A-Z])/g, '$1 $2'), key.toLowerCase(), key.toUpperCase()];
+    if (key === 'InternCode') variants = variants.concat(['Intern Code', 'internCode', 'Intern code']);
+    if (key === 'EmailID') variants = variants.concat(['Email ID', 'emailID', 'Email id', 'emailId']);
+    if (key === 'MobileNo') variants = variants.concat(['Mobile No', 'Mobile NO', 'mobileNo']);
+    if (key === 'WhatsappNo') variants = variants.concat(['Whatsapp No', 'WhatsApp No', 'whatsappNo', 'WhatsApp Number', 'Whatsapp Number']);
+    if (key === 'DomainName') variants = variants.concat(['Domain Name', 'domainName']);
+    if (key === 'CurrentStatus') variants = variants.concat(['Current Status', 'currentStatus']);
+    if (key === 'StatusReason') variants = variants.concat(['Status Reason', 'statusReason']);
+    for (var i = 0; i < variants.length; i++) { if (r[variants[i]] !== undefined && r[variants[i]] !== '') return r[variants[i]]; }
+    return '';
+  }
+
   function renderTLTable() {
     var body = document.getElementById('tlBody');
     var head = document.getElementById('tlHead');
@@ -3411,12 +3494,12 @@
     var q = (document.getElementById('tlSearch').value || '').toLowerCase();
     tlFiltered = (tlInterns || []).filter(function(r) {
       if (!q) return true;
-      return (tlHeaderKeys || []).some(function(k) { return String(r[k] || '').toLowerCase().indexOf(q) !== -1; });
+      return TL_COLS.some(function(c) { return String(tlVal(r, c.key) || '').toLowerCase().indexOf(q) !== -1; });
     });
     document.getElementById('tlCount').textContent = (tlInterns || []).length;
     var hh = '';
-    for (var i = 0; i < (tlHeaders || []).length; i++) {
-      hh += '<th><div class="col-header"><span>' + esc(tlHeaders[i]) + '</span></div></th>';
+    for (var i = 0; i < TL_COLS.length; i++) {
+      hh += '<th><div class="col-header"><span>' + esc(TL_COLS[i].label) + '</span></div></th>';
     }
     hh += '<th class="action-col" style="min-width:140px">Action</th>';
     head.innerHTML = hh;
@@ -3431,14 +3514,14 @@
       var r = tlFiltered[j];
       var rn = r.rowNumber;
       h += '<tr>';
-      for (var ki = 0; ki < (tlHeaderKeys || []).length; ki++) {
-        var key = tlHeaderKeys[ki];
-        var val = r[key] !== undefined ? r[key] : '';
-        var disp = esc(val);
-        if (key === 'OnboardingDate' || key === 'StartDate' || key === 'EndDate') disp = esc(fmtDate(val));
+      for (var ci = 0; ci < TL_COLS.length; ci++) {
+        var c = TL_COLS[ci];
+        var raw = tlVal(r, c.key);
+        var disp = esc(raw);
+        if (c.key === 'OnboardingDate' || c.key === 'StartDate' || c.key === 'EndDate') disp = esc(fmtDate(raw));
         var cellCls = 'cell-text';
-        if (key === 'OnboardingDate') cellCls = 'cell-date';
-        h += '<td class="' + cellCls + '" style="font-size:12px;white-space:normal;word-break:break-word;vertical-align:top" title="' + disp + '">' + disp + '</td>';
+        if (c.key === 'OnboardingDate') cellCls = 'cell-date';
+        h += '<td data-label="' + esc(c.label) + '" class="' + cellCls + '" style="font-size:12px;white-space:normal;word-break:break-word;vertical-align:top" title="' + disp + '">' + disp + '</td>';
       }
       h += '<td class="action-col"><button class="btn btn-sm btn-blue" onclick="openTLStatus(' + rn + ')">Change Current Status</button></td></tr>';
     }
