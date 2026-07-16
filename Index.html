@@ -1484,44 +1484,40 @@
   var API_TOKEN = 'hrtn_2026_x';
 
   var API_MAP = {
-    verifyHRLogin: function(a){ return { action: 'verifyHRLogin', payload: { userId: a[0], password: a[1] } }; },
-    verifyTLLogin: function(a){ return { action: 'verifyTLLogin', payload: { email: a[0], password: a[1] } }; },
-    fetchTLInterns: function(a){ return { action: 'fetchTLInterns', payload: { groupName: a[0] } }; },
-    getActiveDomains: function(){ return { action: 'getActiveDomains', payload: {} }; },
-    handleInternRegistration: function(a){ return { action: 'handleInternRegistration', payload: { formData: a[0], pdfFileData: a[1] } }; },
-    fetchInternRecords: function(){ return { action: 'fetchInternRecords', payload: {} }; },
-    fetchProjectDetails: function(){ return { action: 'fetchProjectDetails', payload: {} }; },
-    saveRowModifications: function(a){ return { action: 'saveRowModifications', payload: { rowNum: a[0], fields: a[1] } }; },
-    forceCodeGeneration: function(a){ return { action: 'forceCodeGeneration', payload: { rowNum: a[0] } }; },
-    fireOnboardingMails: function(a){ return { action: 'fireOnboardingMails', payload: { rowNum: a[0] } }; },
-    writeProjectSetting: function(a){ return { action: 'writeProjectSetting', payload: { rowNum: a[0], groupName: a[1], emailId: a[2], whatsappLink: a[3], domainName: a[4] } }; },
-    updateInternRow: function(a){ return { action: 'updateInternRow', payload: { rowNum: a[0], formData: a[1], pdfFileData: a[2], validationStatus: a[3], validationReason: a[4], internCode: a[5], groupName: a[6] } }; },
-    updateInternFullRecord: function(a){ return { action: 'updateInternFullRecord', payload: { rowNum: a[0], fields: a[1] } }; },
-    fetchProgramDetails: function(){ return { action: 'fetchProgramDetails', payload: {} }; },
-    writeProgramSetting: function(a){ return { action: 'writeProgramSetting', payload: { rowNum: a[0], domainName: a[1], groupName: a[2] } }; },
-    writeProgramDomain: function(a){ return { action: 'writeProgramDomain', payload: { rowNum: a[0], domainName: a[1] } }; },
-    deleteProgramSetting: function(a){ return { action: 'deleteProgramSetting', payload: { rowNum: a[0] } }; },
-    deleteProjectSetting: function(a){ return { action: 'deleteProjectSetting', payload: { rowNum: a[0] } }; },
-    fetchProjectGroupsByDomain: function(a){ return { action: 'fetchProjectGroupsByDomain', payload: { domain: a[0] } }; },
-    getRegistrationStatus: function(){ return { action: 'getRegistrationStatus', payload: {} }; },
-    setRegistrationStatus: function(a){ return { action: 'setRegistrationStatus', payload: { enabled: a[0] } }; },
-    sendTLMail: function(a){ return { action: 'sendTLMail', payload: { rowNum: a[0] } }; },
-    sendBulkEmails: function(a){ return { action: 'sendBulkEmails', payload: { rowNums: a[0], type: a[1] } }; },
-    testDataConnection: function(){ return { action: 'testDataConnection', payload: {} }; },
-    deleteInternRecord: function(a){ return { action: 'deleteInternRecord', payload: { rowNum: a[0] } }; }
+    verifyHRLogin: function(a){ return { action: 'verifyHRLogin', userId: a[0], password: a[1] }; },
+    verifyTLLogin: function(a){ return { action: 'verifyTLLogin', email: a[0], password: a[1] }; },
+    fetchTLInterns: function(a){ return { action: 'fetchTLInterns', groupName: a[0] }; },
+    getActiveDomains: function(){ return { action: 'getActiveDomains' }; },
+    handleInternRegistration: function(a){ return { action: 'handleInternRegistration', formData: a[0], pdfFileData: a[1] }; },
+    fetchInternRecords: function(){ return { action: 'fetchInternRecords' }; },
+    fetchProjectDetails: function(){ return { action: 'fetchProjectDetails' }; },
+    saveRowModifications: function(a){ return { action: 'saveRowModifications', rowNum: a[0], fields: a[1] }; },
+    forceCodeGeneration: function(a){ return { action: 'forceCodeGeneration', rowNum: a[0] }; },
+    fireOnboardingMails: function(a){ return { action: 'fireOnboardingMails', rowNum: a[0] }; },
+    writeProjectSetting: function(a){ return { action: 'writeProjectSetting', rowNum: a[0], groupName: a[1], emailId: a[2], whatsappLink: a[3], domainName: a[4] }; },
+    updateInternRow: function(a){ return { action: 'updateInternRow', rowNum: a[0], formData: a[1], pdfFileData: a[2], validationStatus: a[3], validationReason: a[4], internCode: a[5], groupName: a[6] }; },
+    updateInternFullRecord: function(a){ return { action: 'updateInternFullRecord', rowNum: a[0], fields: a[1] }; },
+    fetchProgramDetails: function(){ return { action: 'fetchProgramDetails' }; },
+    writeProgramSetting: function(a){ return { action: 'writeProgramSetting', rowNum: a[0], domainName: a[1], groupName: a[2] }; },
+    writeProgramDomain: function(a){ return { action: 'writeProgramDomain', rowNum: a[0], domainName: a[1] }; },
+    deleteProgramSetting: function(a){ return { action: 'deleteProgramSetting', rowNum: a[0] }; },
+    deleteProjectSetting: function(a){ return { action: 'deleteProjectSetting', rowNum: a[0] }; },
+    fetchProjectGroupsByDomain: function(a){ return { action: 'fetchProjectGroupsByDomain', domain: a[0] }; },
+    getRegistrationStatus: function(){ return { action: 'getRegistrationStatus' }; },
+    setRegistrationStatus: function(a){ return { action: 'setRegistrationStatus', enabled: a[0] }; },
+    sendTLMail: function(a){ return { action: 'sendTLMail', rowNum: a[0] }; },
+    sendBulkEmails: function(a){ return { action: 'sendBulkEmails', rowNums: a[0], type: a[1] }; },
+    testDataConnection: function(){ return { action: 'testDataConnection' }; },
+    deleteInternRecord: function(a){ return { action: 'deleteInternRecord', rowNum: a[0] }; }
   };
 
   function _gsExecute(fnName, args, successCb, failureCb) {
     var spec = API_MAP[fnName];
     if (!spec) { console.error('Unknown backend function: ' + fnName); if (failureCb) failureCb('Unknown backend function: ' + fnName); return; }
     var mapped = spec(args || []);
-    mapped.payload = mapped.payload || {};
-    mapped.payload.__token = API_TOKEN;
-    fetch(BACKEND_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(mapped)
-    })
+    mapped.__token = API_TOKEN;
+    var url = BACKEND_URL + '?data=' + encodeURIComponent(JSON.stringify(mapped));
+    fetch(url, { method: 'GET', cache: 'no-store' })
     .then(function(r){ return r.json(); })
     .then(function(data){
       if (data && data.success === false && data.error) {

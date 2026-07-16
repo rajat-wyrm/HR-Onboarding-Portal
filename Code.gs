@@ -194,7 +194,16 @@ function buildRowArray(sheet, valsObj, existingRow) {
   } catch (e) { Logger.log("clearDataCache: " + e.toString()); }
  }
 
-function doGet() {
+function doGet(e) {
+  if (e && e.parameter) {
+    var p = e.parameter;
+    if (p.data) {
+      try { p = JSON.parse(p.data); } catch (_) {}
+    }
+    if (p && p.action) {
+      return jsonResponse(handleApi(p));
+    }
+  }
   ensureSheetsExist();
   CONFIG.WEBAPP_URL = resolveWebAppUrl();
   return HtmlService.createHtmlOutputFromFile('Index')
@@ -205,7 +214,6 @@ function doGet() {
 
 function doPost(e) {
   try {
-    CONFIG.WEBAPP_URL = resolveWebAppUrl();
     var payload = {};
     if (e.postData && e.postData.contents) {
       try { payload = JSON.parse(e.postData.contents); } catch (_) {}
@@ -216,10 +224,20 @@ function doPost(e) {
         if (payload[keys[k]] === undefined) payload[keys[k]] = e.parameter[keys[k]];
       }
     }
+    return jsonResponse(handleApi(payload));
+  } catch (err) {
+    return jsonResponse({ success: false, error: err.toString() });
+  }
+}
+
+function handleApi(payload) {
+  try {
+    CONFIG.WEBAPP_URL = resolveWebAppUrl();
+    payload = payload || {};
     if (payload.__token !== undefined && payload.__token !== API_TOKEN) {
-      return jsonResponse({ success: false, error: 'Unauthorized: invalid token' });
+      return { success: false, error: 'Unauthorized: invalid token' };
     }
-    var action = payload.action || (e.parameter ? e.parameter.action : null);
+    var action = payload.action || null;
     var result;
     switch (action) {
       case 'verifyHRLogin':        result = verifyHRLogin(payload.userId || '', payload.password || ''); break;
@@ -239,7 +257,7 @@ function doPost(e) {
       case 'writeProgramSetting':  result = writeProgramSetting(Number(payload.rowNum), payload.domainName, payload.groupName); break;
       case 'writeProgramDomain':   result = writeProgramDomain(Number(payload.rowNum), payload.domainName); break;
       case 'deleteProgramSetting': result = deleteProgramSetting(Number(payload.rowNum)); break;
-      case 'deleteProjectSetting': result = deleteProjectSetting(Number(payload.rowNum)); break;
+      case 'deleteProjectSetting': result = deleteProgramSetting(Number(payload.rowNum)); break;
       case 'fetchProjectGroupsByDomain': result = fetchProjectGroupsByDomain(payload.domain); break;
       case 'getRegistrationStatus': result = getRegistrationStatus(); break;
       case 'setRegistrationStatus': result = setRegistrationStatus(payload.enabled); break;
@@ -249,9 +267,9 @@ function doPost(e) {
       case 'deleteInternRecord':   result = deleteInternRecord(Number(payload.rowNum)); break;
       default:                     result = { success: false, error: 'Unknown action: ' + action };
     }
-    return jsonResponse(result);
+    return result;
   } catch (err) {
-    return jsonResponse({ success: false, error: err.toString() });
+    return { success: false, error: err.toString() };
   }
 }
 
